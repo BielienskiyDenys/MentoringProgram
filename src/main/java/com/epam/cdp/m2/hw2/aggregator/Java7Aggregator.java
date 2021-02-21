@@ -34,19 +34,6 @@ public class Java7Aggregator implements Aggregator {
         return wordsCount;
     }
 
-    private <T> LinkedList<T> getFirstElementsFromList(long limit, LinkedList<T> orderedList) {
-        LinkedList<T> listToReturn = new LinkedList<>();
-        for (long i = 0; i < limit; i++) {
-            if (orderedList.isEmpty()) {
-                break;
-            }
-            T firstPair = orderedList.getFirst();
-            listToReturn.add(firstPair);
-            orderedList.removeFirst();
-        }
-        return listToReturn;
-    }
-
     private LinkedList<Pair<String, Long>> makeListOfPairsFromMapOrderedByValue(Map<String, Long> mapForCalculating) {
         LinkedList<Pair<String, Long>> orderedList = new LinkedList<>();
         for (String word : mapForCalculating.keySet()) {
@@ -73,6 +60,18 @@ public class Java7Aggregator implements Aggregator {
         return orderedList;
     }
 
+    private <T> LinkedList<T> getFirstElementsFromList(long limit, LinkedList<T> orderedList) {
+        LinkedList<T> listToReturn = new LinkedList<>();
+        for (long i = 0; i < limit; i++) {
+            if (orderedList.isEmpty()) {
+                break;
+            }
+            listToReturn.add(orderedList.getFirst());
+            orderedList.removeFirst();
+        }
+        return listToReturn;
+    }
+
     private boolean addPairIfListContainsOnePosition(LinkedList<Pair<String, Long>> orderedList, Pair<String, Long> newPairToInsert) {
         if (orderedList.size() == 1) {
             if (newPairToInsert.getValue() > orderedList.getFirst().getValue()) {
@@ -91,6 +90,28 @@ public class Java7Aggregator implements Aggregator {
         List<String> listOfDuplicates = getAllDuplicatesFromMap(mapWordsCounters);
         LinkedList<String> orderedList = sortListByWordsLengthDescending(listOfDuplicates);
         return getFirstElementsFromList(limit, orderedList);
+    }
+
+    private Map<String, Long> countWordsAndSwitchThemToUppercase(List<String> words) {
+        Map<String, Long> mapWordsCounters = new HashMap<>();
+        for (String word : words) {
+            if (mapWordsCounters.containsKey(word.toUpperCase())) {
+                mapWordsCounters.put(word.toUpperCase(), mapWordsCounters.get(word.toUpperCase()) + 1);
+            } else {
+                mapWordsCounters.put(word.toUpperCase(), 1L);
+            }
+        }
+        return mapWordsCounters;
+    }
+
+    private List<String> getAllDuplicatesFromMap(Map<String, Long> mapWordsCounters) {
+        List<String> listOfDuplicates = new LinkedList<>();
+        for (String word : mapWordsCounters.keySet()) {
+            if (mapWordsCounters.get(word.toUpperCase()) > 1) {
+                listOfDuplicates.add(word.toUpperCase());
+            }
+        }
+        return listOfDuplicates;
     }
 
     private LinkedList<String> sortListByWordsLengthDescending(List<String> listOfDuplicates) {
@@ -145,27 +166,5 @@ public class Java7Aggregator implements Aggregator {
         if (!duplicateWasInserted) {
             orderedList.addLast(duplicate);
         }
-    }
-
-    private List<String> getAllDuplicatesFromMap(Map<String, Long> mapWordsCounters) {
-        List<String> listOfDuplicates = new LinkedList<>();
-        for (String word : mapWordsCounters.keySet()) {
-            if (mapWordsCounters.get(word.toUpperCase()) > 1) {
-                listOfDuplicates.add(word.toUpperCase());
-            }
-        }
-        return listOfDuplicates;
-    }
-
-    private Map<String, Long> countWordsAndSwitchThemToUppercase(List<String> words) {
-        Map<String, Long> mapWordsCounters = new HashMap<>();
-        for (String word : words) {
-            if (mapWordsCounters.containsKey(word.toUpperCase())) {
-                mapWordsCounters.put(word.toUpperCase(), mapWordsCounters.get(word.toUpperCase()) + 1);
-            } else {
-                mapWordsCounters.put(word.toUpperCase(), 1L);
-            }
-        }
-        return mapWordsCounters;
     }
 }

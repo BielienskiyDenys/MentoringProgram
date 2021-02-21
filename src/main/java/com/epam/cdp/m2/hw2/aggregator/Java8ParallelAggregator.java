@@ -22,8 +22,7 @@ public class Java8ParallelAggregator implements Aggregator {
                 .entrySet()
                 .parallelStream()
                 .map(e -> new Pair<>(e.getKey(), e.getValue()))
-//                .sorted((e1, e2) -> Math.toIntExact(e1.getValue()-e2.getValue()))
-                .sorted((e1, e2) -> (int) (e2.getValue() - e1.getValue()))
+                .sorted((e1, e2) -> Math.toIntExact(e2.getValue()-e1.getValue()))
                 .limit(limit)
                 .collect(toList());
     }

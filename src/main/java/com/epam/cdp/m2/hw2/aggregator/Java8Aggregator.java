@@ -14,9 +14,6 @@ public class Java8Aggregator implements Aggregator {
         return numbers.stream()
                 .mapToInt(x -> x)
                 .reduce(0, Integer::sum);
-//        return numbers.stream()
-//                .mapToInt(x -> x)
-//                .sum();
     }
 
 
@@ -27,8 +24,7 @@ public class Java8Aggregator implements Aggregator {
                 .entrySet()
                 .stream()
                 .map(e -> new Pair<>(e.getKey(), e.getValue()))
-//                .sorted((e1, e2) -> Math.toIntExact(e1.getValue()-e2.getValue()))
-                .sorted((e1, e2) -> (int) (e2.getValue() - e1.getValue()))
+                .sorted((e1, e2) -> Math.toIntExact(e2.getValue()-e1.getValue()))
                 .limit(limit)
                 .collect(toList());
     }

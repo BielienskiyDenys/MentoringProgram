@@ -10,40 +10,63 @@ public class Java7ParallelAggregator implements Aggregator {
     @Override
     public int sum(List<Integer> numbers) {
         int size = getSizeOfSubListForSingleThread(numbers);
-        Summation[] threads = new Summation[THREADS_NUMBER];
+        SummationThread[] threads = createAndStartSummationThreads(numbers, size);
+        joinAllThreadsInArray(threads);
+        return joinSummationThreadsResults(threads);
+    }
+
+    private int getSizeOfSubListForSingleThread(List list) {
+        return (int) Math.ceil(list.size() * 1.0 / THREADS_NUMBER);
+    }
+
+    private SummationThread[] createAndStartSummationThreads(List<Integer> numbers, int size) {
+        SummationThread[] threads = new SummationThread[THREADS_NUMBER];
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            threads[i] = new Summation(numbers, i * size, (i + 1) * size);
+            threads[i] = new SummationThread(numbers, i * size, (i + 1) * size);
             threads[i].start();
         }
-        joinAllThreadsInArray(threads);
+        return threads;
+    }
+
+    private void joinAllThreadsInArray(Thread[] threads) {
+        try {
+            for (Thread t : threads) {
+                t.join();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int joinSummationThreadsResults(SummationThread[] threads) {
         int commonResult = 0;
-        for (Summation t : threads) {
+        for (SummationThread t : threads) {
             commonResult += t.calculationsResult;
         }
         return commonResult;
     }
 
-
     @Override
     public List<Pair<String, Long>> getMostFrequentWords(List<String> words, long limit) {
         int size = getSizeOfSubListForSingleThread(words);
-        WordsCounter[] threads = new WordsCounter[THREADS_NUMBER];
+        WordsCounterThread[] threads = createAndStartWordsCountersThreads(words, size, false);
+        joinAllThreadsInArray(threads);
+        Map<String, Long> commonResult = joinThreadsResults(threads);
+        LinkedList<Pair<String, Long>> orderedList = getListOfPairsOrderedByValueFromMap(commonResult);
+        return getFirstElementsOfList(limit, orderedList);
+    }
+
+    private WordsCounterThread[] createAndStartWordsCountersThreads(List<String> words, int size, boolean switchToUppercase) {
+        WordsCounterThread[] threads = new WordsCounterThread[THREADS_NUMBER];
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            threads[i] = new WordsCounter(words, i * size, (i + 1) * size);
+            threads[i] = new WordsCounterThread(words, i * size, (i + 1) * size, switchToUppercase);
             threads[i].start();
         }
-        joinAllThreadsInArray(threads);
-        Map<String, Long> commonResult = new HashMap<>();
-        for (WordsCounter t : threads) {
-            for (String s : t.calculationResult.keySet()) {
-                if (commonResult.containsKey(s)) {
-                    commonResult.put(s, commonResult.get(s) + t.calculationResult.get(s));
-                } else {
-                    commonResult.put(s, t.calculationResult.get(s));
-                }
-            }
-        }
+        return threads;
+    }
 
+
+    private LinkedList<Pair<String, Long>> getListOfPairsOrderedByValueFromMap(Map<String, Long> commonResult) {
         LinkedList<Pair<String, Long>> orderedList = new LinkedList<>();
         for (String word : commonResult.keySet()) {
             Pair<String, Long> newPairToInsert = new Pair<>(word, commonResult.get(word));
@@ -74,30 +97,12 @@ public class Java7ParallelAggregator implements Aggregator {
                 orderedList.addLast(newPairToInsert);
             }
         }
-        LinkedList<Pair<String, Long>> listToReturn = new LinkedList<>();
-        for (long i = 0; i < limit; i++) {
-            if (orderedList.isEmpty()) {
-                break;
-            }
-            Pair<String, Long> firstPair = orderedList.getFirst();
-            listToReturn.add(firstPair);
-            orderedList.removeFirst();
-        }
-
-        return listToReturn;
+        return orderedList;
     }
 
-    @Override
-    public List<String> getDuplicates(List<String> words, long limit) {
-        int size = getSizeOfSubListForSingleThread(words);
-        WordsCounter[] threads = new WordsCounter[THREADS_NUMBER];
-        for (int i = 0; i < THREADS_NUMBER; i++) {
-            threads[i] = new WordsCounter(words, i * size, (i + 1) * size, true);
-            threads[i].start();
-        }
-        joinAllThreadsInArray(threads);
+    private Map<String, Long> joinThreadsResults(WordsCounterThread[] threads) {
         Map<String, Long> commonResult = new HashMap<>();
-        for (WordsCounter t : threads) {
+        for (WordsCounterThread t : threads) {
             for (String s : t.calculationResult.keySet()) {
                 if (commonResult.containsKey(s)) {
                     commonResult.put(s, commonResult.get(s) + t.calculationResult.get(s));
@@ -106,18 +111,52 @@ public class Java7ParallelAggregator implements Aggregator {
                 }
             }
         }
+        return commonResult;
+    }
 
-        DuplicateMapper[] threadsForMappingDuplicates = new DuplicateMapper[THREADS_NUMBER];
+    private <T> LinkedList<T> getFirstElementsOfList(long limit, LinkedList<T> orderedList) {
+        LinkedList<T> listToReturn = new LinkedList<>();
+        for (long i = 0; i < limit; i++) {
+            if (orderedList.isEmpty()) {
+                break;
+            }
+            listToReturn.add(orderedList.getFirst());
+            orderedList.removeFirst();
+        }
+        return listToReturn;
+    }
+
+    @Override
+    public List<String> getDuplicates(List<String> words, long limit) {
+        int size = getSizeOfSubListForSingleThread(words);
+        WordsCounterThread[] wordsCounterThreads = createAndStartWordsCountersThreads(words, size, true);
+        joinAllThreadsInArray(wordsCounterThreads);
+        Map<String, Long> commonResult = joinThreadsResults(wordsCounterThreads);
+        DuplicateMapperThread[] threadsForMappingDuplicates = createAndStartDuplicateMapperThreads(size, commonResult);
+        joinAllThreadsInArray(threadsForMappingDuplicates);
+        List<String> listOfDuplicates = joinDuplicateMapperThreadsResult(threadsForMappingDuplicates);
+        LinkedList<String> orderedList = orderDuplicatesByStringLength(listOfDuplicates);
+        return getFirstElementsOfList(limit, orderedList);
+    }
+
+    private DuplicateMapperThread[] createAndStartDuplicateMapperThreads(int size, Map<String, Long> commonResult) {
+        DuplicateMapperThread[] threadsForMappingDuplicates = new DuplicateMapperThread[THREADS_NUMBER];
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            threadsForMappingDuplicates[i] = new DuplicateMapper(commonResult, i * size, (i + 1) * size);
+            threadsForMappingDuplicates[i] = new DuplicateMapperThread(commonResult, i * size, (i + 1) * size);
             threadsForMappingDuplicates[i].start();
         }
-        joinAllThreadsInArray(threadsForMappingDuplicates);
+        return threadsForMappingDuplicates;
+    }
+
+    private List<String> joinDuplicateMapperThreadsResult(DuplicateMapperThread[] threadsForMappingDuplicates) {
         List<String> listOfDuplicates = new LinkedList<>();
-        for (DuplicateMapper t : threadsForMappingDuplicates) {
+        for (DuplicateMapperThread t : threadsForMappingDuplicates) {
             listOfDuplicates.addAll(t.calculationResult);
         }
+        return listOfDuplicates;
+    }
 
+    private LinkedList<String> orderDuplicatesByStringLength(List<String> listOfDuplicates) {
         LinkedList<String> orderedList = new LinkedList<>();
         for (String duplicate : listOfDuplicates) {
             if (orderedList.isEmpty()) {
@@ -155,38 +194,15 @@ public class Java7ParallelAggregator implements Aggregator {
                 orderedList.addLast(duplicate);
             }
         }
-
-        LinkedList<String> listToReturn = new LinkedList<>();
-        for (long i = 0; i < limit; i++) {
-            if (orderedList.isEmpty()) {
-                break;
-            }
-            listToReturn.add(orderedList.getFirst());
-            orderedList.removeFirst();
-        }
-        return listToReturn;
+        return orderedList;
     }
 
-    private int getSizeOfSubListForSingleThread(List list) {
-        return (int) Math.ceil(list.size() * 1.0 / THREADS_NUMBER);
-    }
-
-    private void joinAllThreadsInArray(Thread[] threads) {
-        try {
-            for (Thread t : threads) {
-                t.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private class Summation extends Thread {
+    private class SummationThread extends Thread {
         private final List<Integer> list;
         private final int low, high;
         private int calculationsResult;
 
-        Summation(List<Integer> list, int low, int high) {
+        SummationThread(List<Integer> list, int low, int high) {
             this.list = list;
             this.low = low;
             this.high = Math.min(high, list.size());
@@ -206,13 +222,13 @@ public class Java7ParallelAggregator implements Aggregator {
         }
     }
 
-    private class WordsCounter extends Thread {
+    private class WordsCounterThread extends Thread {
         private final List<String> list;
         private final int low, high;
         Map<String, Long> calculationResult;
         private final boolean switchResultToUpperCase;
 
-        WordsCounter(List<String> list, int low, int high) {
+        WordsCounterThread(List<String> list, int low, int high) {
             this.list = list;
             this.low = low;
             this.high = Math.min(high, list.size());
@@ -220,7 +236,7 @@ public class Java7ParallelAggregator implements Aggregator {
             this.switchResultToUpperCase = false;
         }
 
-        WordsCounter(List<String> list, int low, int high, boolean switchResultToUpperCase) {
+        WordsCounterThread(List<String> list, int low, int high, boolean switchResultToUpperCase) {
             this.list = list;
             this.low = low;
             this.high = Math.min(high, list.size());
@@ -241,13 +257,13 @@ public class Java7ParallelAggregator implements Aggregator {
         }
     }
 
-    private class DuplicateMapper extends Thread {
+    private class DuplicateMapperThread extends Thread {
         private final Map<String, Long> map;
         private final List<String> list;
         private final int low, high;
         LinkedList<String> calculationResult;
 
-        DuplicateMapper(Map<String, Long> map, int low, int high) {
+        DuplicateMapperThread(Map<String, Long> map, int low, int high) {
             this.map = map;
             this.list = new ArrayList<>(map.keySet());
             this.low = low;
