@@ -54,14 +54,14 @@ public class Java7Aggregator implements Aggregator {
                 }
             }
             if (!pairWasInserted) {
-                orderedList.addLast(newPairToInsert);
+                orderedList.add(newPairToInsert);
             }
         }
         return orderedList;
     }
 
-    private <T> LinkedList<T> getFirstElementsFromList(long limit, LinkedList<T> orderedList) {
-        LinkedList<T> listToReturn = new LinkedList<>();
+    private <T> List<T> getFirstElementsFromList(long limit, LinkedList<T> orderedList) {
+        List<T> listToReturn = new LinkedList<>();
         for (long i = 0; i < limit; i++) {
             if (orderedList.isEmpty()) {
                 break;
@@ -135,7 +135,7 @@ public class Java7Aggregator implements Aggregator {
     private boolean insertStringIntoOrderedListWithOneElement(LinkedList<String> orderedList, String duplicate) {
         if (orderedList.size() == 1) {
             if (duplicate.length() > orderedList.getFirst().length()) {
-                orderedList.addLast(duplicate);
+                orderedList.add(duplicate);
             } else {
                 orderedList.addFirst(duplicate);
             }
@@ -144,7 +144,7 @@ public class Java7Aggregator implements Aggregator {
         return false;
     }
 
-    private void insertStringIntoOrderedListWithTwoOrMoreElements(LinkedList<String> orderedList, String duplicate) {
+    private void insertStringIntoOrderedListWithTwoOrMoreElements(List<String> orderedList, String duplicate) {
         ListIterator<String> listIterator = orderedList.listIterator();
         boolean duplicateWasInserted = false;
         while (listIterator.hasNext()) {
@@ -164,7 +164,7 @@ public class Java7Aggregator implements Aggregator {
             }
         }
         if (!duplicateWasInserted) {
-            orderedList.addLast(duplicate);
+            orderedList.add(duplicate);
         }
     }
 }

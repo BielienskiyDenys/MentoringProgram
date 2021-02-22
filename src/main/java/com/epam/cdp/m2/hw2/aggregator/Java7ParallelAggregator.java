@@ -94,7 +94,7 @@ public class Java7ParallelAggregator implements Aggregator {
                 }
             }
             if (!pairWasInserted) {
-                orderedList.addLast(newPairToInsert);
+                orderedList.add(newPairToInsert);
             }
         }
         return orderedList;
@@ -114,7 +114,7 @@ public class Java7ParallelAggregator implements Aggregator {
         return commonResult;
     }
 
-    private <T> LinkedList<T> getFirstElementsOfList(long limit, LinkedList<T> orderedList) {
+    private <T> List<T> getFirstElementsOfList(long limit, LinkedList<T> orderedList) {
         LinkedList<T> listToReturn = new LinkedList<>();
         for (long i = 0; i < limit; i++) {
             if (orderedList.isEmpty()) {
@@ -165,7 +165,7 @@ public class Java7ParallelAggregator implements Aggregator {
             }
             if (orderedList.size() == 1) {
                 if (duplicate.length() > orderedList.getFirst().length()) {
-                    orderedList.addLast(duplicate);
+                    orderedList.add(duplicate);
                 } else {
                     orderedList.addFirst(duplicate);
                 }
@@ -191,7 +191,7 @@ public class Java7ParallelAggregator implements Aggregator {
                 }
             }
             if (!duplicateWasInserted) {
-                orderedList.addLast(duplicate);
+                orderedList.add(duplicate);
             }
         }
         return orderedList;
@@ -261,7 +261,7 @@ public class Java7ParallelAggregator implements Aggregator {
         private final Map<String, Long> map;
         private final List<String> list;
         private final int low, high;
-        LinkedList<String> calculationResult;
+        List<String> calculationResult;
 
         DuplicateMapperThread(Map<String, Long> map, int low, int high) {
             this.map = map;
