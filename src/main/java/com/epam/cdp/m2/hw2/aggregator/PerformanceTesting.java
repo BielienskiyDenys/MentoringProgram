@@ -1,5 +1,7 @@
 package com.epam.cdp.m2.hw2.aggregator;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,84 +11,64 @@ import java.util.stream.Stream;
 
 public class PerformanceTesting {
     public static void start() {
-        List<Aggregator> aggregatorList = new ArrayList<>();
+        List<Aggregator> aggregators = new ArrayList<>();
 
-        aggregatorList.add(new Java7Aggregator());
-        aggregatorList.add(new Java8Aggregator());
-        aggregatorList.add(new Java7ParallelAggregator());
-        aggregatorList.add(new Java8ParallelAggregator());
+        aggregators.add(new Java7Aggregator());
+        aggregators.add(new Java8Aggregator());
+        aggregators.add(new Java7ParallelAggregator());
+        aggregators.add(new Java8ParallelAggregator());
 
-        List<List<Integer>> listOfIntegerLists = new ArrayList<>();
-        listOfIntegerLists.add(generateListOfIntegers(100_000));
-        listOfIntegerLists.add(generateListOfIntegers(1_000_000));
-        listOfIntegerLists.add(generateListOfIntegers(10_000_000));
+        List<List<Integer>> tasksForSum = new ArrayList<>();
+        tasksForSum.add(generateListOfIntegers(100_000));
+        tasksForSum.add(generateListOfIntegers(1_000_000));
+        tasksForSum.add(generateListOfIntegers(10_000_000));
 
-        List<List<String>> listOfStringListsForFrequency = new ArrayList<>();
-        listOfStringListsForFrequency.add(generateListOfStrings(2_000));
-        listOfStringListsForFrequency.add(generateListOfStrings(5_000));
-        listOfStringListsForFrequency.add(generateListOfStrings(10_000));
+        List<List<String>> tasksForFrequency = new ArrayList<>();
+        tasksForFrequency.add(generateListOfStrings(2_000));
+        tasksForFrequency.add(generateListOfStrings(5_000));
+        tasksForFrequency.add(generateListOfStrings(10_000));
 
-        List<List<String>> listOfStringListsForDuplicates = new ArrayList<>();
-        listOfStringListsForDuplicates.add(generateListOfStrings(10_000));
-        listOfStringListsForDuplicates.add(generateListOfStrings(100_000));
-        listOfStringListsForDuplicates.add(generateListOfStrings(300_000));
+        List<List<String>> tasksForDuplicates = new ArrayList<>();
+        tasksForDuplicates.add(generateListOfStrings(10_000));
+        tasksForDuplicates.add(generateListOfStrings(100_000));
+        tasksForDuplicates.add(generateListOfStrings(300_000));
 
-        runSummationTaskOnListsForAllAggregatorsAndPrintResult(aggregatorList, listOfIntegerLists, 20);
-        runFrequentStringSearchTaskOnListsForAllAggregatorsAndPrintResult(aggregatorList, listOfStringListsForFrequency, 20);
-        runDuplicatesTaskOnListsForAllAggregatorsAndPrintResult(aggregatorList, listOfStringListsForDuplicates, 20);
-
+        runMethodOnListOfTasks(Methods.SUM.name(), tasksForSum, 20, aggregators);
+        runMethodOnListOfTasks(Methods.FREQUENCY.name(), tasksForFrequency, 20, aggregators);
+        runMethodOnListOfTasks(Methods.DUPLICATES.name(), tasksForDuplicates, 20, aggregators);
     }
 
-    private static void runSummationTaskOnListsForAllAggregatorsAndPrintResult(List<Aggregator> aggregatorList, List<List<Integer>> listOfTaskLists, int runs) {
-        System.out.println("*** SUMMATION ***");
-        for(List<Integer> currentList: listOfTaskLists) {
-            for(Aggregator currentAggregator: aggregatorList) {
+    private static <T> void runMethodOnListOfTasks(String method, List<List<T>> tasks, int runs, List<Aggregator> aggregators) {
+        System.out.println("*** " + method + " ***");
+        for (List<T> task : tasks) {
+            for (Aggregator aggregator : aggregators) {
                 double executionTime = 0;
-                for(int i = 0; i<runs; i++){
-                long testStart = System.currentTimeMillis();
-                currentAggregator.sum(currentList);
-                long testEnd = System.currentTimeMillis();
-                executionTime += testEnd - testStart;}
-                executionTime = executionTime/runs;
-                System.out.println(executionTime + " ms -- Processing list with " + currentList.size() + " elements with " + currentAggregator.getClass().getSimpleName());
-            }
-            System.out.println();
-        }
-    }
-
-    private static void runFrequentStringSearchTaskOnListsForAllAggregatorsAndPrintResult(List<Aggregator> aggregatorList, List<List<String>> listOfTaskLists, int runs) {
-        System.out.println("*** FREQUENT STRINGS SEARCH ***");
-        for(List<String> currentList: listOfTaskLists) {
-            for(Aggregator currentAggregator: aggregatorList) {
-                double executionTime = 0;
-                for(int i = 0; i<runs; i++) {
+                for (int i = 0; i < runs; i++) {
                     long testStart = System.currentTimeMillis();
-                    currentAggregator.getMostFrequentWords(currentList, 50L);
+                    performSuitableMethod(method, task, aggregator);
                     long testEnd = System.currentTimeMillis();
                     executionTime += testEnd - testStart;
                 }
-                executionTime = executionTime/runs;
-                System.out.println(executionTime + " ms -- Processing list with " + currentList.size() + " elements with " + currentAggregator.getClass().getSimpleName());
+                executionTime = executionTime / runs;
+                System.out.println(executionTime + " ms -- Processing list with " + task.size() + " elements with " + aggregator.getClass().getSimpleName());
             }
             System.out.println();
         }
     }
 
-    private static void runDuplicatesTaskOnListsForAllAggregatorsAndPrintResult(List<Aggregator> aggregatorList, List<List<String>> listOfTaskLists, int runs) {
-        System.out.println("*** DUPLICATES SEARCH ***");
-        for(List<String> currentList: listOfTaskLists) {
-            for(Aggregator currentAggregator: aggregatorList) {
-                double executionTime = 0;
-                for(int i = 0; i<runs; i++) {
-                long testStart = System.currentTimeMillis();
-                currentAggregator.getDuplicates(currentList, 50L);
-                long testEnd = System.currentTimeMillis();
-                    executionTime += testEnd - testStart;
-                }
-                executionTime = executionTime/runs;
-                System.out.println(executionTime + " ms -- Processing list with " + currentList.size() + " elements with " + currentAggregator.getClass().getSimpleName());
-            }
-            System.out.println();
+    private static <T> void performSuitableMethod(String method, List<T> task, Aggregator aggregator) {
+        switch (method) {
+            case "SUM":
+                aggregator.sum((List<Integer>) task);
+                break;
+            case "FREQUENCY":
+                aggregator.getMostFrequentWords((List<String>) task, 20L);
+                break;
+            case "DUPLICATES":
+                aggregator.getDuplicates((List<String>) task, 20L);
+                break;
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -98,7 +80,7 @@ public class PerformanceTesting {
     }
 
     private static List<String> generateListOfStrings(int size) {
-        return Stream.generate(() -> generateString(5))
+        return Stream.generate(() -> generateString(getRandomNumberInRange(4, 6)))
                 .limit(size)
                 .collect(Collectors.toList());
     }
@@ -120,7 +102,13 @@ public class PerformanceTesting {
     private static char getRandomChar() {
         Random r = new Random();
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return  alphabet.charAt(r.nextInt(alphabet.length()));
+        return alphabet.charAt(r.nextInt(alphabet.length()));
+    }
+
+    enum Methods {
+        SUM,
+        FREQUENCY,
+        DUPLICATES
     }
 
 }
