@@ -1,0 +1,2 @@
+During simplest calculations the fastest way seems to be using Java 7 single-thread calculations.
+During complex calculations Java 8 streams work faster. Using of parallel streams is justified on a really big collections, containing hundreds thousands or millions of elements.

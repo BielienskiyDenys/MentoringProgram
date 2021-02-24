@@ -12,19 +12,27 @@ public class Java8Aggregator implements Aggregator {
     @Override
     public int sum(List<Integer> numbers) {
         return numbers.stream()
-                .mapToInt(x -> x)
                 .reduce(0, Integer::sum);
     }
 
 
     @Override
     public List<Pair<String, Long>> getMostFrequentWords(List<String> words, long limit) {
+        Comparator<Pair<String, Long>> myComparator = (p1, p2) -> {
+            if (p1.getValue() < p2.getValue()) {
+                return 1;
+            } else if (p1.getValue() > p2.getValue()) {
+                return -1;
+            }
+            return p1.getKey().compareTo(p2.getKey());
+        };
+
         return words.stream()
                 .collect(Collectors.groupingBy(e -> e, counting()))
                 .entrySet()
                 .stream()
                 .map(e -> new Pair<>(e.getKey(), e.getValue()))
-                .sorted((e1, e2) -> Math.toIntExact(e2.getValue()-e1.getValue()))
+                .sorted(myComparator)
                 .limit(limit)
                 .collect(toList());
     }
@@ -47,5 +55,16 @@ public class Java8Aggregator implements Aggregator {
                 .sorted(myComparator)
                 .limit(limit)
                 .collect(toList());
+
+// Solution without outer Set
+//        return words.stream()
+//                .collect(groupingBy(String::toUpperCase, counting()))
+//                .entrySet()
+//                .stream()
+//                .filter(e -> e.getValue()>1)
+//                .map(Map.Entry::getKey)
+//                .sorted(myComparator)
+//                .limit(limit)
+//                .collect(toList());
     }
 }
