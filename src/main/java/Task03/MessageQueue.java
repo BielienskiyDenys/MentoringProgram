@@ -11,9 +11,9 @@ public class MessageQueue {
 
     public synchronized boolean addMessage(Message message) {
         if (index < maxMessagesCount) {
-            notifyAll();
             queue.add(message);
             index++;
+            notifyAll();
         } else {
             Task3Util.safeSleep(500);
             return false;
