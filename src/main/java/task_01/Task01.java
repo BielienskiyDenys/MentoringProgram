@@ -1,7 +1,6 @@
-package Task01;
+package task_01;
 
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +32,7 @@ public class Task01 {
         threadsWithoutSync.writer.start();
         threadsWithoutSync.summarizer.start();
         try {
+            Thread.currentThread().sleep(1000);
             threadsWithoutSync.writer.join();
             threadsWithoutSync.summarizer.join();
         } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package Task03;
+package task_03;
 
 import java.util.LinkedList;
 
@@ -13,7 +13,6 @@ public class MessageQueue {
         if (index < maxMessagesCount) {
             queue.add(message);
             index++;
-            notifyAll();
         } else {
             Task3Util.safeSleep(500);
             return false;
@@ -25,7 +24,6 @@ public class MessageQueue {
         while (true) {
             if (index > minMessagesCount && consumersTheme.equals(queue.getFirst().getTheme())) {
                 index--;
-                notifyAll();
                 return queue.removeFirst();
             } else {
                 return null;

@@ -1,9 +1,9 @@
-package Task02;
+package task_02;
 
-public class Summarizer implements Runnable {
+public class Rooter implements Runnable{
     ListForThreads listForThreads;
 
-    public Summarizer(ListForThreads listForThreads) {
+    public Rooter(ListForThreads listForThreads) {
         this.listForThreads = listForThreads;
     }
 
@@ -11,10 +11,10 @@ public class Summarizer implements Runnable {
     public void run() {
         while (true) {
             synchronized (listForThreads) {
-                if (listForThreads.getLastSummarizerIndex() < listForThreads.getLastWriterIndex()) {
-                    listForThreads.setSum(listForThreads.getSum() + listForThreads.getList().get(listForThreads.getLastSummarizerIndex() + 1));
-                    listForThreads.setLastSummarizerIndex(listForThreads.getLastSummarizerIndex() + 1);
-                    System.out.println("sum = " + listForThreads.getSum());
+                if (listForThreads.getLastRooterIndex() < listForThreads.getLastWriterIndex()) {
+                    listForThreads.setLastRooterIndex(listForThreads.getLastRooterIndex() + 1);
+                    listForThreads.setSumOfSquares(listForThreads.getSumOfSquares() + (listForThreads.getList().get(listForThreads.getLastRooterIndex()) * listForThreads.getList().get(listForThreads.getLastRooterIndex())));
+                    System.out.println("sqrtOfSumOfSqures = " + Math.sqrt(listForThreads.getSumOfSquares()));
                 }
 //                try {
 //                    sleep(1);

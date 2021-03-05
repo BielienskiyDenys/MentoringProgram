@@ -1,6 +1,6 @@
-package Task03;
+package task_03;
 
-import Util.InterruptTimer;
+import util.InterruptTimer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class Task03 {
         Thread timer = new Thread(new InterruptTimer(5, threads));
         timer.start();
 
-        Util.Util.startAndJoin(threads);
-        Util.Util.safeJoin(timer);
+        util.Util.startAndJoin(threads);
+        util.Util.safeJoin(timer);
 
 
     }

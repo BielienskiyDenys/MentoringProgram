@@ -1,4 +1,4 @@
-package Task02;
+package task_02;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,11 @@ public class ListForThreads {
 
     public ListForThreads() {
         this.list = new ArrayList<>();
-        this.lastWriterIndex = -1;
-        this.lastSummarizerIndex = -1;
-        this.lastRooterIndex = -1;
-        this.sum = 0;
-        this.sumOfSquares = 0;
+        this.lastWriterIndex = Task02Constants.LAST_WRITER_INDEX_DEFAULT;
+        this.lastSummarizerIndex = Task02Constants.LAST_SUMMARIZER_INDEX_DEFAULT;
+        this.lastRooterIndex = Task02Constants.LAST_ROOTER_INDEX_DEFAULT;
+        this.sum = Task02Constants.SUM_DEFAULT;
+        this.sumOfSquares = Task02Constants.SUM_OF_SQUARES_DEFAULT;
     }
 
     public List<Integer> getList() {

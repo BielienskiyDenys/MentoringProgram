@@ -1,4 +1,4 @@
-package Task03;
+package task_03;
 
 public class Producer implements Runnable {
     private MessageQueue messageQueue;

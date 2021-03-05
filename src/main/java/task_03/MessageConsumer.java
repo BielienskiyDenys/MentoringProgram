@@ -1,4 +1,4 @@
-package Task03;
+package task_03;
 
 public class MessageConsumer implements Runnable {
     private MessageQueue messageQueue;

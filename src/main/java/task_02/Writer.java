@@ -1,6 +1,6 @@
-package Task02;
+package task_02;
 
-import Util.Util;
+import util.Util;
 
 public class Writer implements Runnable {
     private ListForThreads listForThreads;

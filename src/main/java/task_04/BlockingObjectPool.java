@@ -1,6 +1,6 @@
-package Task04;
+package task_04;
 
-import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
@@ -22,7 +22,14 @@ public class BlockingObjectPool {
         this.size = size;
         this.storage = new Object[size];
         for (int i = 0; i < size; i++) {
-            storage[i] = new Object();
+            storage[i] = new Object(){
+                    Random random = new Random();
+                    String s = String.valueOf(random.nextInt(1000));
+                @Override
+                public String toString() {
+                    return s;
+                }
+            };
         }
         index = size - 1;
     }

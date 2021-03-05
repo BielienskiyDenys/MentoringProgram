@@ -1,6 +1,6 @@
-package Task01;
+package task_01;
 
-import Util.Util;
+import util.Util;
 
 import java.util.Map;
 

@@ -1,8 +1,8 @@
-package Task04;
+package task_04;
 
 
 
-import Util.BooleanTimer;
+import util.BooleanTimer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +26,8 @@ public class Task04 {
         Thread timer = new Thread(new BooleanTimer(2, stop));
         timer.start();
 
-        Util.Util.startAndJoin(threads);
-        Util.Util.safeJoin(timer);
+        util.Util.startAndJoin(threads);
+        util.Util.safeJoin(timer);
 
 
     }

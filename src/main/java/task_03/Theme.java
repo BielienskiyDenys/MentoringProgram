@@ -1,4 +1,4 @@
-package Task03;
+package task_03;
 
 public enum Theme {
     POLITICS,

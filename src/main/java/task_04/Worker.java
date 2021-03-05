@@ -1,6 +1,4 @@
-package Task04;
-
-import Util.Util;
+package task_04;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,8 +18,8 @@ public class Worker implements Runnable {
     public void run() {
         while (!stop.get()) {
             System.out.println(Thread.currentThread().getName() + " going to get object;");
-           Object object = blockingObjectPool.get();
-            System.out.println(Thread.currentThread().getName() + " has taken Object from the pool;");
+            Object object = blockingObjectPool.get();
+            System.out.println(Thread.currentThread().getName() + " has taken Object " + object + " from the pool;");
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -29,7 +27,7 @@ public class Worker implements Runnable {
             }
             System.out.println(Thread.currentThread().getName() + " going to put object back;");
             blockingObjectPool.take(object);
-            System.out.println(Thread.currentThread().getName() + " has returned Object to the pool;");
+            System.out.println(Thread.currentThread().getName() + " has returned Object " + object + " to the pool;");
         }
         System.out.println(Thread.currentThread().getName() + " closing.");
     }
