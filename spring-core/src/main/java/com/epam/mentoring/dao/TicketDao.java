@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epam.mentoring.model.Ticket;
 import com.epam.mentoring.model.User;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 public class TicketDao {
 	private static Logger logger = LoggerFactory.getLogger(TicketDao.class);

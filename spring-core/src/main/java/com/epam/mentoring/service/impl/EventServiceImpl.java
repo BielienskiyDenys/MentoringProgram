@@ -13,6 +13,8 @@ import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.User;
 import com.epam.mentoring.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 public class EventServiceImpl implements EventService{
 	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -31,9 +33,10 @@ public class EventServiceImpl implements EventService{
 		if (eventDao.findEventById(event.getId()) == null) {
 			logger.debug("addEvent({}) call. Readressing to repository.", event);
 			eventDao.addEvent(event);
+		} else {
+			logger.error("addEvent({}) call. No event found. Throwing error.", event);
+			throw new EntryExistsAlreadyException("Event already registered.");
 		}
-		logger.error("addEvent({}) call. No event found. Throwing error.", event);
-		throw new EntryExistsAlreadyException("Event already registered.");
 	}
 	
 	public Event removeEventById(Long eventId) throws EntryNotFoundException {

@@ -11,6 +11,8 @@ import com.epam.mentoring.exceptions.EntryNotFoundException;
 import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.model.User;
 import com.epam.mentoring.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 public class UserServiceImpl implements UserService {
 	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);

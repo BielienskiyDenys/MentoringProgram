@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epam.mentoring.model.Event;
+import org.springframework.stereotype.Component;
 
 public class EventDao {
 	private static Logger logger = LoggerFactory.getLogger(EventDao.class);
@@ -41,7 +42,8 @@ public class EventDao {
 	
 	public Event updateEvent(Event event) {
 		logger.debug("updateEvent({}) call.", event);
-		return events.put(event.getId(), event);
+		events.put(event.getId(), event);
+		return event;
 	}
 	
 	public List<Event> findEventsByTitle(String title) {

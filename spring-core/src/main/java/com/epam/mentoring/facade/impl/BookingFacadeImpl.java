@@ -1,5 +1,6 @@
 package com.epam.mentoring.facade.impl;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,8 @@ import com.epam.mentoring.model.impl.TicketImpl;
 import com.epam.mentoring.service.EventService;
 import com.epam.mentoring.service.TicketService;
 import com.epam.mentoring.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 public class BookingFacadeImpl implements BookingFacade {
 	private static Logger logger = LoggerFactory.getLogger(BookingFacadeImpl.class);
@@ -53,6 +56,7 @@ public class BookingFacadeImpl implements BookingFacade {
 			logger.debug("getEventsByTitle({}) call. User found.", title);
 		} catch (EntryNotFoundException e) {
 			logger.error("getEventsByTitle({}) call. No user found.", title);
+			return Collections.emptyList();
 		}
 		return events.stream().skip(pageSize * pageNum).limit(pageSize).collect(Collectors.toList());
 	}
@@ -65,6 +69,7 @@ public class BookingFacadeImpl implements BookingFacade {
 			logger.debug("getEventsForDay({}) call. User found.", day);
 		} catch (EntryNotFoundException e) {
 			logger.error("getEventsForDay({}) call. No user found.", day);
+			return Collections.emptyList();
 		}
 		return events.stream().skip(pageSize * pageNum).limit(pageSize).collect(Collectors.toList());
 	}
@@ -203,6 +208,7 @@ public class BookingFacadeImpl implements BookingFacade {
 			logger.debug("getBookedTickets({}) call. Tickets found.", user);
 		} catch (EntryNotFoundException e) {
 			logger.error("getBookedTickets({}) call. No ticket found.", user);
+			return null;
 		}
 		return tickets.stream().skip(pageSize * pageNum).limit(pageSize).collect(Collectors.toList());
 	}

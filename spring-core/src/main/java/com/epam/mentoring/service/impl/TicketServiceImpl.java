@@ -14,6 +14,7 @@ import com.epam.mentoring.model.User;
 import com.epam.mentoring.model.Ticket.Category;
 import com.epam.mentoring.model.impl.TicketImpl;
 import com.epam.mentoring.service.TicketService;
+import org.springframework.stereotype.Service;
 
 public class TicketServiceImpl implements TicketService {
 	private static Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);

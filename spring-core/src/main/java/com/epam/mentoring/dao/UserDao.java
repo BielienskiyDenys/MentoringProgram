@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epam.mentoring.facade.impl.BookingFacadeImpl;
 import com.epam.mentoring.model.User;
+import org.springframework.stereotype.Component;
 
 public class UserDao {
 	private static Logger logger = LoggerFactory.getLogger(UserDao.class);
