@@ -18,8 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,7 +28,45 @@ public class IntegrationTest {
     private BookingFacade bookingFacade;
 
     @Test
-    public void test() throws Exception {
+    public void registered_user_books_ticket_for_valid_event() throws Exception {
+        User user = bookingFacade.getUserById(333L);
+        assertEquals("Peter", user.getName());
+
+        Event event = bookingFacade.getEventById(10L);
+        assertEquals("January Event", event.getTitle());
+
+        Ticket ticket = bookingFacade.bookTicket(333L, 10L, 50, Ticket.Category.BAR );
+        assertNotNull(ticket);
+    }
+
+    @Test
+    public void existing_user_buys_ticket_twice() {
+        Ticket userOneTicket = bookingFacade.bookTicket(333L, 10L, 50, Ticket.Category.BAR );
+        assertEquals(333L, userOneTicket.getUserId());
+        assertEquals(10L, userOneTicket.getEventId());
+
+        Ticket userTwoTicket = bookingFacade.bookTicket(344L, 10L, 50, Ticket.Category.BAR );
+        assertEquals(0, userTwoTicket.getUserId());
+        assertEquals(0, userTwoTicket.getEventId());
+    }
+
+    @Test
+    public void new_user_buys_ticket_for_non_existing_event() {
+        User testUser = new UserImpl();
+        testUser.setId(777L);
+        testUser.setName("Terry");
+        testUser.setEmail("flat@world.com");
+
+        User receivedUser = bookingFacade.createUser(testUser);
+        assertEquals(testUser, receivedUser);
+
+        Ticket ticket = bookingFacade.bookTicket(777L, 1000L, 50, Ticket.Category.BAR );
+        assertEquals(0, ticket.getUserId());
+        assertEquals(0, ticket.getEventId());
+    }
+
+    @Test
+    public void new_user_changes_name_and_buys_ticket_for_new_event_and_cancels_it() throws Exception {
         User testUser = new UserImpl();
         testUser.setId(777L);
         testUser.setName("Terry");
@@ -72,4 +109,6 @@ public class IntegrationTest {
 
         assertNull(newTicketsRequest);
     }
+
+
 }

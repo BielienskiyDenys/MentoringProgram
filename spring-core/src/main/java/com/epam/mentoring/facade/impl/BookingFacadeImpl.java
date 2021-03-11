@@ -196,8 +196,11 @@ public class BookingFacadeImpl implements BookingFacade {
 		} catch (EntryValidationException e) {
 			logger.error("bookTicket({}, {}, {}, {}) call. Mandatory fields missing in user.", userId, eventId, place, category);
 			return new TicketImpl();
+		} catch (EntryNotFoundException | EntryExistsAlreadyException e) {
+			logger.error("bookTicket({}, {}, {}, {}) call. Failure. Reason: {}", userId, eventId, place, category, e.getMessage());
+			return new TicketImpl();
 		}
-	
+
 	}
 
 	@Override

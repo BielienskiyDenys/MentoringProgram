@@ -2,6 +2,9 @@ package com.epam.mentoring.service.impl;
 
 import java.util.List;
 
+import com.epam.mentoring.dao.EventDao;
+import com.epam.mentoring.dao.UserDao;
+import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,24 +22,36 @@ import org.springframework.stereotype.Service;
 public class TicketServiceImpl implements TicketService {
 	private static Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 	private TicketDao ticketDao;
+	private UserDao userDao;
+	private EventDao eventDao;
 
 	public TicketDao getTicketDao() {
 		return ticketDao;
 	}
-
 	public void setTicketDao(TicketDao ticketDao) {
 		this.ticketDao = ticketDao;
 	}
+	public UserDao getUserDao() {return userDao;}
+	public void setUserDao(UserDao userDao) {this.userDao = userDao;}
+	public EventDao getEventDao() {return eventDao;}
+	public void setEventDao(EventDao eventDao) {this.eventDao = eventDao;}
 
-	public Ticket addTicket(long userId, long eventId, int place, Category category) throws EntryValidationException {
-		// possible check for the combination of eventId and place to exist
-		// possible check if user with such id exists
-		// possible check if event with such id exists
-		if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
+	public Ticket addTicket(long userId, long eventId, int place, Category category) throws EntryValidationException, EntryNotFoundException, EntryExistsAlreadyException {
+		if (userId <= 0 || eventId <= 0 || place <= 0 || place>300 ||category == null) {
 			logger.error("addTicket({}, {}, {}, {}) call. Invalid fields. Throwing error.", userId, eventId, place,
 					category);
 			throw new EntryValidationException();
 		}
+		if (userDao.findUserById(userId)==null) {
+			throw new EntryNotFoundException("User not found.");
+		}
+		if (eventDao.findEventById(eventId)==null) {
+			throw new EntryNotFoundException("Event not found.");
+		}
+		if(ticketDao.checkIfTicketSold(eventId, place)) {
+			throw new EntryExistsAlreadyException("This ticket is already sold.");
+		}
+
 		Ticket ticket = new TicketImpl(userId, eventId, place, category);
 		logger.debug("addTicket({}, {}, {}, {}) call. Created new ticket with Id {}. Readressing to repository", userId, eventId, place,
 				category, ticket.getId());

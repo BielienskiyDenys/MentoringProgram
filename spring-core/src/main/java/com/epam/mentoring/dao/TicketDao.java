@@ -48,4 +48,10 @@ public class TicketDao {
 				.collect(Collectors.toList());
 	}
 
+	public boolean checkIfTicketSold (long eventId, int place) {
+		logger.debug("checkIfTicketSold({}, {}) call.", eventId, place);
+		return tickets.values().stream()
+				.anyMatch(ticket -> ticket.getEventId() == eventId && ticket.getPlace() == place);
+	}
+
 }
