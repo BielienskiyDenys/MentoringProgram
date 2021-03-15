@@ -50,4 +50,5 @@ Total mark is 7. 5 points for regular homework and 2 points for extra mile.
 
 Extra mile (optional, should be done when previous items are complete) (2 points):
 
-Use "p" namespace to define properties Use SLF4J API for logging, configure Spring to use SLF4J and add some Spring logging output to common application log.
+Use "p" namespace to define properties
+Use SLF4J API for logging, configure Spring to use SLF4J and add some Spring logging output to common application log.
