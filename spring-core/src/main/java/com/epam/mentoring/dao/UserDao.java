@@ -1,15 +1,12 @@
 package com.epam.mentoring.dao;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.epam.mentoring.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.mentoring.facade.impl.BookingFacadeImpl;
-import com.epam.mentoring.model.User;
-import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UserDao {
 	private static Logger logger = LoggerFactory.getLogger(UserDao.class);

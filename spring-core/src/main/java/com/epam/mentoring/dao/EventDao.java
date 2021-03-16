@@ -1,17 +1,15 @@
 package com.epam.mentoring.dao;
 
+import com.epam.mentoring.model.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.epam.mentoring.model.Event;
-import org.springframework.stereotype.Component;
 
 public class EventDao {
 	private static Logger logger = LoggerFactory.getLogger(EventDao.class);

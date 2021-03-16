@@ -52,14 +52,14 @@ public class IntegrationTest {
     @Test
     public void new_user_buys_ticket_for_non_existing_event() {
         User testUser = new UserImpl();
-        testUser.setId(777L);
-        testUser.setName("Terry");
-        testUser.setEmail("flat@world.com");
+        testUser.setId(666L);
+        testUser.setName("Thomas");
+        testUser.setEmail("catch@mouse.com");
 
         User receivedUser = bookingFacade.createUser(testUser);
         assertEquals(testUser, receivedUser);
 
-        Ticket ticket = bookingFacade.bookTicket(777L, 1000L, 50, Ticket.Category.BAR );
+        Ticket ticket = bookingFacade.bookTicket(666L, 1000L, 50, Ticket.Category.BAR );
         assertEquals(0, ticket.getUserId());
         assertEquals(0, ticket.getEventId());
     }
@@ -74,7 +74,7 @@ public class IntegrationTest {
         Event testEvent = new EventImpl();
         testEvent.setId(888L);
         testEvent.setTitle("Magic Conference");
-        testEvent.setDate(Date.from(Instant.parse("2021-03-03T17:00:00.000Z")));
+        testEvent.setDate(Date.from(Instant.parse("2022-03-03T17:00:00.000Z")));
 
         User receivedUser = bookingFacade.createUser(testUser);
         assertEquals(testUser, receivedUser);
@@ -106,7 +106,7 @@ public class IntegrationTest {
 
         List<Ticket> newTicketsRequest = bookingFacade.getBookedTickets(testUser, 10, 0);
 
-        assertNull(newTicketsRequest);
+        assertTrue(newTicketsRequest.isEmpty());
     }
 
 

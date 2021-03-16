@@ -1,23 +1,19 @@
 package com.epam.mentoring.service.impl;
 
-import java.util.List;
-
 import com.epam.mentoring.dao.EventDao;
+import com.epam.mentoring.dao.TicketDao;
 import com.epam.mentoring.dao.UserDao;
-import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
+import com.epam.mentoring.model.Event;
+import com.epam.mentoring.model.Ticket;
+import com.epam.mentoring.model.Ticket.Category;
+import com.epam.mentoring.model.User;
+import com.epam.mentoring.model.impl.TicketImpl;
+import com.epam.mentoring.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.mentoring.dao.TicketDao;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
-import com.epam.mentoring.exceptions.EntryValidationException;
-import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.User;
-import com.epam.mentoring.model.Ticket.Category;
-import com.epam.mentoring.model.impl.TicketImpl;
-import com.epam.mentoring.service.TicketService;
-import org.springframework.stereotype.Service;
+import java.util.Collections;
+import java.util.List;
 
 public class TicketServiceImpl implements TicketService {
 	private static Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
@@ -36,56 +32,52 @@ public class TicketServiceImpl implements TicketService {
 	public EventDao getEventDao() {return eventDao;}
 	public void setEventDao(EventDao eventDao) {this.eventDao = eventDao;}
 
-	public Ticket addTicket(long userId, long eventId, int place, Category category) throws EntryValidationException, EntryNotFoundException, EntryExistsAlreadyException {
+	public Ticket addTicket(long userId, long eventId, int place, Category category) {
 		if (userId <= 0 || eventId <= 0 || place <= 0 || place>300 ||category == null) {
-			logger.error("addTicket({}, {}, {}, {}) call. Invalid fields. Throwing error.", userId, eventId, place,
+			logger.error("addTicket({}, {}, {}, {}) call. Invalid fields.", userId, eventId, place,
 					category);
-			throw new EntryValidationException();
+			return new TicketImpl();
 		}
-		if (userDao.findUserById(userId)==null) {
-			throw new EntryNotFoundException("User not found.");
-		}
-		if (eventDao.findEventById(eventId)==null) {
-			throw new EntryNotFoundException("Event not found.");
-		}
-		if(ticketDao.checkIfTicketSold(eventId, place)) {
-			throw new EntryExistsAlreadyException("This ticket is already sold.");
-		}
-
+		if (userDao.findUserById(userId)!=null && eventDao.findEventById(eventId)!=null && !ticketDao.checkIfTicketSold(eventId, place)) {
 		Ticket ticket = new TicketImpl(userId, eventId, place, category);
 		logger.debug("addTicket({}, {}, {}, {}) call. Created new ticket with Id {}. Readressing to repository", userId, eventId, place,
 				category, ticket.getId());
 		ticketDao.addTicket(ticket);
-		return ticket;
+			return ticket;
+		}
+
+		logger.error("addTicket({}, {}, {}, {}) call. Failed to create ticket.", userId, eventId, place,
+				category);
+		return new TicketImpl();
 	}
 	
-	public Ticket removeTicketById(Long ticketId) throws EntryNotFoundException {
+	public boolean removeTicketById(Long ticketId) {
 		logger.debug("removeTicketById({}) call. Readressing to repository.", ticketId);
 		Ticket ticket = ticketDao.removeTicketById(ticketId);
 		if (ticket != null) {
-			return ticket;
+			return true;
 		}
 		logger.error("removeTicketById({}) call. No ticket found. Throwing error.", ticketId);
-		throw new EntryNotFoundException("Ticket not found.");
+		return false;
 	}
 	
-	public List<Ticket> findTicketsByUser(User user) throws EntryNotFoundException {
+	public List<Ticket> findTicketsByUser(User user) {
 		logger.debug("findTicketsByUser({}) call. Readressing to repository.", user.getId());
 		List<Ticket> filteredTickets = ticketDao.findTicketsByUserId(user.getId());
 		if (!filteredTickets.isEmpty()) {
 			return filteredTickets;
 		}
-		logger.error("findTicketsByUser({}) call. No ticket found. Throwing error.", user.getId());
-		throw new EntryNotFoundException("Ticket not found.");
+		logger.error("findTicketsByUser({}) call. No ticket found.", user.getId());
+		return Collections.emptyList();
 	}
 	
-	public List<Ticket> findTicketsByEvent(Event event) throws EntryNotFoundException {
+	public List<Ticket> findTicketsByEvent(Event event) {
 		logger.debug("findTicketsByEvent({}) call. Readressing to repository.", event.getId());
 		List<Ticket> filteredTickets = ticketDao.findTicketsByEventId(event.getId());
 		if (!filteredTickets.isEmpty()) {
 			return filteredTickets;
 		}
 		logger.error("findTicketsByEvent({}) call. No ticket found. Throwing error.", event.getId());
-		throw new EntryNotFoundException("Ticket not found.");
+		return Collections.emptyList();
 	}
 }

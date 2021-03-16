@@ -1,22 +1,19 @@
 package com.epam.mentoring.service;
 
-import java.util.List;
-
-import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
-import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.model.User;
 
+import java.util.List;
+
 public interface UserService {
-	public void addUser(User user) throws EntryExistsAlreadyException, EntryValidationException;
+	public boolean addUser(User user);
 
-	public User removeUserById(Long userId) throws EntryNotFoundException;
+	public boolean removeUserById(Long userId);
 
-	public User findUserById(long userId) throws EntryNotFoundException;
+	public User findUserById(long userId);
 
-	public User findUserByEmail(String userEmail) throws EntryNotFoundException;
+	public User findUserByEmail(String userEmail);
 
-	public List<User> findUsersByName(String userName) throws EntryNotFoundException;
+	public List<User> findUsersByName(String userName);
 
-	public User updateUser(User user) throws EntryNotFoundException, EntryValidationException;
+	public boolean updateUser(User user);
 }

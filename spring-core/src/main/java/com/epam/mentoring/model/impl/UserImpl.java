@@ -2,9 +2,17 @@ package com.epam.mentoring.model.impl;
 
 import com.epam.mentoring.model.User;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 public class UserImpl implements User {
+	@Positive(message = "User id should not be less than 1")
 	private long id;
+	@Size(min = 3, max = 50, message
+			= "Name should be between 3 and 50 characters")
 	private String name;
+	@Email(message = "Email should be valid")
 	private String email;
 
 	@Override

@@ -1,9 +1,5 @@
 package com.epam.mentoring.facade.impl;
 
-import com.epam.mentoring.dao.EventDao;
-import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
-import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.facade.BookingFacade;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.impl.EventImpl;
@@ -20,7 +16,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,7 +54,7 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void getEventById_successful_scenario() throws EntryNotFoundException {
+    void getEventById_successful_scenario() {
         when(eventService.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
 
         Event receivedEvent = bookingFacade.getEventById(TEST_EVENT_ID);
@@ -66,17 +65,20 @@ class BookingFacadeImplTest {
 
 
     @Test
-    void getEventById_not_found() throws EntryNotFoundException {
-        when(eventService.findEventById(eq(TEST_EVENT_ID))).thenThrow(new EntryNotFoundException());
+    void getEventById_not_found() {
+        Event eventFromService = new EventImpl();
+        eventFromService.setTitle("No such event");
+        when(eventService.findEventById(eq(TEST_EVENT_ID))).thenReturn(eventFromService);
 
         Event receivedEvent = bookingFacade.getEventById(TEST_EVENT_ID);
 
-        assertNull(receivedEvent);
+        assertNotNull(receivedEvent);
+        assertEquals("No such event", receivedEvent.getTitle());
         verify(eventService, times(1)).findEventById(eq(TEST_EVENT_ID));
     }
 
     @Test
-    void getEventsByTitle_successful_scenario() throws EntryNotFoundException {
+    void getEventsByTitle_successful_scenario() {
         List<Event> eventList = new ArrayList<>();
         eventList.add(new EventImpl());
         eventList.add(testEvent);
@@ -90,8 +92,8 @@ class BookingFacadeImplTest {
 
 
     @Test
-    void getEventsByTitle_not_found() throws EntryNotFoundException {
-        when(eventService.findEventsByTitle(eq("Event"))).thenThrow(new EntryNotFoundException());;
+    void getEventsByTitle_not_found() {
+        when(eventService.findEventsByTitle(eq("Event"))).thenReturn(Collections.emptyList());
 
         List<Event> receivedEvents = bookingFacade.getEventsByTitle("Event", 10, 0);
 
@@ -100,7 +102,7 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void getEventsForDay_successful_scenario() throws EntryNotFoundException {
+    void getEventsForDay_successful_scenario() {
         List<Event> eventList = new ArrayList<>();
         eventList.add(new EventImpl());
         eventList.add(testEvent);
@@ -114,8 +116,8 @@ class BookingFacadeImplTest {
 
 
     @Test
-    void getEventsForDay_not_found() throws EntryNotFoundException {
-        when(eventService.findEventsByDate(eq(TEST_EVENT_DATE))).thenThrow(new EntryNotFoundException());;
+    void getEventsForDay_not_found() {
+        when(eventService.findEventsByDate(eq(TEST_EVENT_DATE))).thenReturn(Collections.emptyList());
 
         List<Event> receivedEvents = bookingFacade.getEventsForDay(TEST_EVENT_DATE, 10, 0);
 
@@ -124,8 +126,8 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void createEvent_successful_scenario() throws EntryValidationException, EntryExistsAlreadyException {
-        doNothing().when(eventService).addEvent(any(Event.class));
+    void createEvent_successful_scenario()  {
+        when(eventService.addEvent(any(Event.class))).thenReturn(true);
 
         Event receivedEvent = bookingFacade.createEvent(testEvent);
 
@@ -134,28 +136,19 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void createEvent_validation_exception() throws EntryValidationException, EntryExistsAlreadyException {
-        doThrow(new EntryValidationException()).when(eventService).addEvent(any(Event.class));
+    void createEvent_validation_exception() {
+        when(eventService.addEvent(any(Event.class))).thenReturn(false);
 
         Event receivedEvent = bookingFacade.createEvent(testEvent);
 
-        assertEquals(testEvent, receivedEvent);
+        assertEquals("Failed to create", receivedEvent.getTitle());
         verify(eventService, times(1)).addEvent(eq(testEvent));
     }
 
-    @Test
-    void createEvent_already_exists_exception() throws EntryValidationException, EntryExistsAlreadyException {
-        doThrow(new EntryExistsAlreadyException()).when(eventService).addEvent(any(Event.class));
-
-        Event receivedEvent = bookingFacade.createEvent(testEvent);
-
-        assertEquals(testEvent, receivedEvent);
-        verify(eventService, times(1)).addEvent(eq(testEvent));
-    }
 
     @Test
-    void updateEvent_successful_scenario() throws EntryValidationException, EntryNotFoundException {
-        when(eventService.updateEvent(any(Event.class))).thenReturn(testEvent);
+    void updateEvent_successful_scenario() {
+        when(eventService.updateEvent(any(Event.class))).thenReturn(true);
 
         Event receivedEvent = bookingFacade.updateEvent(testEvent);
 
@@ -164,28 +157,8 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void updateEvent_validation_exception() throws EntryValidationException, EntryNotFoundException {
-        when(eventService.updateEvent(any(Event.class))).thenThrow(new EntryValidationException());
-
-        Event receivedEvent = bookingFacade.updateEvent(testEvent);
-
-        assertEquals(testEvent, receivedEvent);
-        verify(eventService, times(1)).updateEvent(eq(testEvent));
-    }
-
-    @Test
-    void updateEvent_not_found_exception() throws EntryValidationException, EntryNotFoundException {
-        when(eventService.updateEvent(any(Event.class))).thenThrow(new EntryNotFoundException());
-
-        Event receivedEvent = bookingFacade.updateEvent(testEvent);
-
-        assertEquals(testEvent, receivedEvent);
-        verify(eventService, times(1)).updateEvent(eq(testEvent));
-    }
-
-    @Test
-    void deleteEvent_successful_scenario() throws EntryNotFoundException {
-        when(eventService.removeEventById(anyLong())).thenReturn(testEvent);
+    void deleteEvent_successful_scenario() {
+        when(eventService.removeEventById(anyLong())).thenReturn(true);
 
         boolean wasDeleted = bookingFacade.deleteEvent(TEST_EVENT_ID);
 
@@ -194,8 +167,8 @@ class BookingFacadeImplTest {
     }
 
     @Test
-    void deleteEvent_not_found_exception() throws EntryNotFoundException {
-        when(eventService.removeEventById(anyLong())).thenThrow(new EntryNotFoundException());
+    void deleteEvent_not_found() {
+        when(eventService.removeEventById(anyLong())).thenReturn(false);
 
         boolean wasDeleted = bookingFacade.deleteEvent(TEST_EVENT_ID);
 

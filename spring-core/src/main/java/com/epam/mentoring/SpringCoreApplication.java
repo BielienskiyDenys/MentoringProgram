@@ -1,6 +1,5 @@
 package com.epam.mentoring;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -11,7 +10,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.epam.mentoring.dao.EventDao;
 import com.epam.mentoring.dao.TicketDao;
 import com.epam.mentoring.dao.UserDao;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
 import com.epam.mentoring.facade.BookingFacade;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.Ticket;
@@ -56,36 +54,16 @@ public class SpringCoreApplication {
 				"ticketDao keys " + ticketDao.getTickets().keySet() + "; values " + ticketDao.getTickets().values());
 
 		UserService userService = context.getBean("userService", UserService.class);
-		String name = "";
-
-		try {
-			name = userService.findUserById(355L).getName();
-		} catch (EntryNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String name = userService.findUserById(355L).getName();
 		System.out.println("userService check " + name);
 		
 		EventService eventService = context.getBean("eventService", EventService.class);
-		String title = "";
-		
-		try {
-			title = eventService.findEventById(12L).getTitle();
-		} catch (EntryNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String title = eventService.findEventById(12L).getTitle();
+
 		System.out.println("eventService check " + title);
 		
 		TicketService ticketService = context.getBean("ticketService", TicketService.class);
-		List<Ticket> ticketList = new ArrayList<>();
-		
-		try {
-			ticketList = ticketService.findTicketsByEvent(testEvent);
-		} catch (EntryNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		List<Ticket> ticketList = ticketService.findTicketsByEvent(testEvent);
 		System.out.println("ticketService check " + ticketList);
 
 		BookingFacade bookingFacade = context.getBean("bookingFacade", BookingFacade.class);

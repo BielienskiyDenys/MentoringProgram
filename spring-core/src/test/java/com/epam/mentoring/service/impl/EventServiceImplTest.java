@@ -1,24 +1,15 @@
 package com.epam.mentoring.service.impl;
 
 import com.epam.mentoring.dao.EventDao;
-import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
-import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.impl.EventImpl;
 import com.epam.mentoring.service.EventService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -45,7 +36,8 @@ class EventServiceImplTest {
     private Event testEvent = new EventImpl();
     private final long TEST_EVENT_ID = 88888L;
     private final String TEST_EVENT_TITLE = "testEventTitle";
-    private final Date TEST_EVENT_DATE = Date.from(Instant.parse("2020-06-01T18:30:00.000Z"));
+    private final Date TEST_EVENT_DATE = Date.from(Instant.parse("2030-06-01T18:30:00.000Z"));
+
     @BeforeEach
     private void init() {
         testEvent.setId(TEST_EVENT_ID);
@@ -54,7 +46,7 @@ class EventServiceImplTest {
     }
 
     @Test
-    void addEvent_successful_scenario() throws EntryValidationException, EntryExistsAlreadyException {
+    void addEvent_successful_scenario() {
         doNothing().when(eventDao).addEvent(any(Event.class));
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(null);
 
@@ -65,41 +57,28 @@ class EventServiceImplTest {
     }
 
     @Test
-    void addEvent_registered_already_exception_thrown() throws EntryValidationException {
+    void addEvent_registered_already() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
-        EntryExistsAlreadyException receivedException = null;
 
-        try {
-            eventService.addEvent(testEvent);
-        } catch (EntryExistsAlreadyException e) {
-            receivedException = e;
-        }
+        boolean eventCreated = eventService.addEvent(testEvent);
 
-        assertNotNull(receivedException);
-        assertEquals("Event already registered.", receivedException.getMessage());
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(0)).addEvent(any(Event.class));
+        assertFalse(eventCreated);
     }
 
     @Test
-    void addEvent_verification_exception_thrown() throws EntryExistsAlreadyException {
+    void addEvent_verification_exception_thrown() {
         testEvent.setDate(null);
-        EntryValidationException receivedException = null;
 
-        try {
-            eventService.addEvent(testEvent);
-        } catch (EntryValidationException e) {
-            receivedException = e;
-        }
+        eventService.addEvent(testEvent);
 
-        assertNotNull(receivedException);
-        assertEquals("Date is mandatory.", receivedException.getMessage());
-        verify(eventDao, times(0)).findEventById(anyLong());
-        verify(eventDao, times(0)).addEvent(any(Event.class));
+        verify(eventDao, times(1)).findEventById(anyLong());
+        verify(eventDao, times(1)).addEvent(any(Event.class));
     }
 
     @Test
-    void removeEvent_successful_scenario() throws EntryNotFoundException {
+    void removeEvent_successful_scenario() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
         when(eventDao.removeEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
 
@@ -110,24 +89,18 @@ class EventServiceImplTest {
     }
 
     @Test
-    void removeEvent_not_found_exception() {
+    void removeEvent_not_failure() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(null);
-        EntryNotFoundException receivedException = null;
 
-        try {
-            eventService.removeEventById(TEST_EVENT_ID);
-        } catch (EntryNotFoundException e) {
-           receivedException = e;
-        }
+        boolean eventDeleted = eventService.removeEventById(TEST_EVENT_ID);
 
-        assertNotNull(receivedException);
-        assertEquals("Event not found.", receivedException.getMessage());
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(0)).removeEventById(anyLong());
+        assertFalse(eventDeleted);
     }
 
     @Test
-    void findEventById_successful_scenario() throws EntryNotFoundException {
+    void findEventById_successful_scenario() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
 
         eventService.findEventById(TEST_EVENT_ID);
@@ -138,21 +111,16 @@ class EventServiceImplTest {
     @Test
     void findEventById_not_found_exception() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(null);
-        EntryNotFoundException receivedException = null;
 
-        try {
-            eventService.findEventById(TEST_EVENT_ID);
-        } catch (EntryNotFoundException e) {
-            receivedException = e;
-        }
+         Event event = eventService.findEventById(TEST_EVENT_ID);
 
-        assertNotNull(receivedException);
-        assertEquals("Event not found.", receivedException.getMessage());
+        assertNotNull(event);
+        assertEquals("No such event", event.getTitle());
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
     }
 
     @Test
-    void findEventsByTitle_successful_scenario() throws EntryNotFoundException {
+    void findEventsByTitle_successful_scenario() {
         List<Event> testEventLists = new ArrayList<>();
         testEventLists.add(testEvent);
         when(eventDao.findEventsByTitle(eq(TEST_EVENT_TITLE))).thenReturn(testEventLists);
@@ -165,23 +133,17 @@ class EventServiceImplTest {
     }
 
     @Test
-    void findEventsByTitle_not_found_exception() {
+    void findEventsByTitle_no_events() {
         when(eventDao.findEventsByTitle(eq(TEST_EVENT_TITLE))).thenReturn(Collections.emptyList());
-        EntryNotFoundException receivedException = null;
 
-        try {
-            eventService.findEventsByTitle(TEST_EVENT_TITLE);
-        } catch (EntryNotFoundException e) {
-            receivedException = e;
-        }
+        List<Event> receivedList = eventService.findEventsByTitle(TEST_EVENT_TITLE);
 
-        assertNotNull(receivedException);
-        assertEquals("Events not found.", receivedException.getMessage());
         verify(eventDao, times(1)).findEventsByTitle(eq(TEST_EVENT_TITLE));
+        assertTrue(receivedList.isEmpty());
     }
 
     @Test
-    void findEventsByDate_successful_scenario() throws EntryNotFoundException {
+    void findEventsByDate_successful_scenario() {
         List<Event> testEventLists = new ArrayList<>();
         testEventLists.add(testEvent);
         when(eventDao.findEventsByDate(eq(TEST_EVENT_DATE))).thenReturn(testEventLists);
@@ -194,66 +156,47 @@ class EventServiceImplTest {
     }
 
     @Test
-    void findEventsByDate_not_found_exception() {
+    void findEventsByDate_no_events() {
         when(eventDao.findEventsByDate(eq(TEST_EVENT_DATE))).thenReturn(Collections.emptyList());
-        EntryNotFoundException receivedException = null;
 
-        try {
-            eventService.findEventsByDate(TEST_EVENT_DATE);
-        } catch (EntryNotFoundException e) {
-            receivedException = e;
-        }
+        List<Event> receivedList = eventService.findEventsByDate(TEST_EVENT_DATE);
 
-        assertNotNull(receivedException);
-        assertEquals("Events not found.", receivedException.getMessage());
         verify(eventDao, times(1)).findEventsByDate(eq(TEST_EVENT_DATE));
+        assertTrue(receivedList.isEmpty());
     }
 
     @Test
-    void updateEvent_successful_scenario() throws EntryValidationException, EntryNotFoundException {
+    void updateEvent_successful_scenario() {
         testEvent.setTitle("newTitle");
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
         when(eventDao.updateEvent(eq(testEvent))).thenReturn(testEvent);
 
-        Event receivedEvent = eventService.updateEvent(testEvent);
+        boolean eventReceived  = eventService.updateEvent(testEvent);
 
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(1)).updateEvent(eq(testEvent));
-        assertEquals("newTitle", receivedEvent.getTitle());
+        assertTrue(eventReceived);
     }
 
     @Test
-    void updateEvent_not_found_exception() throws EntryValidationException {
+    void updateEvent_not_found_exception() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(null);
-        EntryNotFoundException receivedException = null;
 
-        Event receivedEvent = null;
-        try {
-            receivedEvent = eventService.updateEvent(testEvent);
-        } catch (EntryNotFoundException e) {
-            receivedException = e;
-        }
+        boolean eventReceived = eventService.updateEvent(testEvent);
 
-        assertNotNull(receivedException);
-        assertEquals("Event not found.", receivedException.getMessage());
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(0)).updateEvent(any(Event.class));
+        assertFalse(eventReceived);
     }
 
     @Test
-    void updateEvent_validation_exception() throws  EntryNotFoundException {
-        testEvent.setDate(null);
-        EntryValidationException receivedException = null;
+    void updateEvent_validation_exception() {
+        testEvent.setTitle("Ti");
 
-        try {
-            eventService.updateEvent(testEvent);
-        } catch (EntryValidationException e) {
-            receivedException = e;
-        }
+        boolean eventReceived = eventService.updateEvent(testEvent);
 
-        assertNotNull(receivedException);
-        assertEquals("Date is mandatory.", receivedException.getMessage());
         verify(eventDao, times(0)).findEventById(anyLong());
         verify(eventDao, times(0)).updateEvent(any(Event.class));
+        assertFalse(eventReceived);
     }
 }

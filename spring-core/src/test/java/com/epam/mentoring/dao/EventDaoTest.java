@@ -1,26 +1,22 @@
 package com.epam.mentoring.dao;
 
-import com.epam.mentoring.exceptions.EntryExistsAlreadyException;
-import com.epam.mentoring.exceptions.EntryNotFoundException;
-import com.epam.mentoring.exceptions.EntryValidationException;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.impl.EventImpl;
-import com.epam.mentoring.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
