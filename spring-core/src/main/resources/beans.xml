@@ -16,149 +16,29 @@ location="classpath:springCoreTaskStorage.properties"/>
     <bean id="dateFormat" class="java.text.SimpleDateFormat">
         <constructor-arg value="yyyy-MM-dd HH:mm:ss" />
     </bean>
-    
-    
-   <bean id="user333" class="com.epam.mentoring.model.impl.UserImpl"> 
-    	<property name="id" value="${user333.id}"></property>  
-    	<property name="name" value="${user333.name}"></property>  
-    	<property name="email" value="${user333.email}"></property>  
-    </bean>
-    <bean id="user344" class="com.epam.mentoring.model.impl.UserImpl"> 
-    	<property name="id" value="${user344.id}"></property>  
-    	<property name="name" value="${user344.name}"></property>  
-    	<property name="email" value="${user344.email}"></property>  
-    </bean>
-    <bean id="user355" class="com.epam.mentoring.model.impl.UserImpl"> 
-    	<property name="id" value="${user355.id}"></property>  
-    	<property name="name" value="${user355.name}"></property>  
-    	<property name="email" value="${user355.email}"></property>  
-    </bean>
-    <bean id="user366" class="com.epam.mentoring.model.impl.UserImpl"> 
-    	<property name="id" value="${user366.id}"></property>  
-    	<property name="name" value="${user366.name}"></property>  
-    	<property name="email" value="${user366.email}"></property>  
-    </bean>
-    <bean id="user377" class="com.epam.mentoring.model.impl.UserImpl"> 
-    	<property name="id" value="${user377.id}"></property>  
-    	<property name="name" value="${user377.name}"></property>  
-    	<property name="email" value="${user377.email}"></property>  
-    </bean>
-    
-     <util:map id="usersMap" map-class="java.util.HashMap" key-type="java.lang.Long" 
-     value-type="com.epam.mentoring.model.User">
- 		 <entry key="333" value-ref="user333" />
- 		 <entry key="344" value-ref="user344" />
- 		 <entry key="355" value-ref="user355" />
- 		 <entry key="366" value-ref="user366" />
- 		 <entry key="377" value-ref="user377" />
-	</util:map>
-	
+
+	<bean id="storage" class="com.epam.mentoring.dao.Storage"
+	init-method="init">
+	</bean>
+
     <bean id="userDao" class="com.epam.mentoring.dao.UserDao">
-    	<property name="users"><ref bean='usersMap'/></property>
+    	<property name="storage"><ref bean='storage'/></property>
     </bean>
     
     <bean id="userService" class="com.epam.mentoring.service.impl.UserServiceImpl"
     autowire="byName">
     </bean>
 
-    <bean id="event10" class="com.epam.mentoring.model.impl.EventImpl"> 
-    	<property name="id" value="${event10.id}"></property>  
-    	<property name="title" value="${event10.title}"></property>  
-    	<property name="date">
-    		<bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="${event10.date}" />
-            </bean>
-        </property>
-     </bean>
-      <bean id="event11" class="com.epam.mentoring.model.impl.EventImpl"> 
-    	<property name="id" value="${event11.id}"></property>  
-    	<property name="title" value="${event11.title}"></property>  
-    	<property name="date">
-    		<bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="${event11.date}" />
-            </bean>
-        </property>
-     </bean>
-      <bean id="event12" class="com.epam.mentoring.model.impl.EventImpl"> 
-    	<property name="id" value="${event12.id}"></property>  
-    	<property name="title" value="${event12.title}"></property>  
-    	<property name="date">
-    		<bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="${event12.date}" />
-            </bean>
-        </property>
-     </bean>
-     
-	<util:map id="eventsMap" map-class="java.util.HashMap" key-type="java.lang.Long" 
-	value-type="com.epam.mentoring.model.Event">
- 		 <entry key="10" value-ref="event10" />
- 		 <entry key="11" value-ref="event11" />
- 		 <entry key="12" value-ref="event12" />
-	</util:map>
-	
     <bean id="eventDao" class="com.epam.mentoring.dao.EventDao">
-    	<property name="events"><ref bean='eventsMap'/></property>
+    	<property name="storage"><ref bean='storage'/></property>
     </bean>
     
       <bean id="eventService" class="com.epam.mentoring.service.impl.EventServiceImpl"
     autowire="byName">
     </bean>
-    
-    <bean id="ticket700" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket700.id}"></property>  
-    	<property name="eventId" value="${ticket700.eventId}"></property>  
-    	<property name="userId" value="${ticket700.userId}"></property>  
-    	<property name="category" value="${ticket700.category}"></property>  
-    	<property name="place" value="${ticket700.place}"></property>  
-    </bean>
-    <bean id="ticket701" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket701.id}"></property>  
-    	<property name="eventId" value="${ticket701.eventId}"></property>  
-    	<property name="userId" value="${ticket701.userId}"></property>  
-    	<property name="category" value="${ticket701.category}"></property>  
-    	<property name="place" value="${ticket701.place}"></property>  
-    </bean>
-    <bean id="ticket702" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket702.id}"></property>  
-    	<property name="eventId" value="${ticket702.eventId}"></property>  
-    	<property name="userId" value="${ticket702.userId}"></property>  
-    	<property name="category" value="${ticket702.category}"></property>  
-    	<property name="place" value="${ticket702.place}"></property>  
-    </bean>
-    <bean id="ticket703" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket703.id}"></property>  
-    	<property name="eventId" value="${ticket703.eventId}"></property>  
-    	<property name="userId" value="${ticket703.userId}"></property>  
-    	<property name="category" value="${ticket703.category}"></property>  
-    	<property name="place" value="${ticket703.place}"></property>  
-    </bean>
-    <bean id="ticket704" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket704.id}"></property>  
-    	<property name="eventId" value="${ticket704.eventId}"></property>  
-    	<property name="userId" value="${ticket704.userId}"></property>  
-    	<property name="category" value="${ticket704.category}"></property>  
-    	<property name="place" value="${ticket704.place}"></property>  
-    </bean>
-    <bean id="ticket705" class="com.epam.mentoring.model.impl.TicketImpl"> 
-    	<property name="id" value="${ticket705.id}"></property>  
-    	<property name="eventId" value="${ticket705.eventId}"></property>  
-    	<property name="userId" value="${ticket705.userId}"></property>  
-    	<property name="category" value="${ticket705.category}"></property>  
-    	<property name="place" value="${ticket705.place}"></property>  
-    </bean>
-    
-	<util:map id="ticketsMap" map-class="java.util.HashMap" key-type="java.lang.Long"
-	value-type="com.epam.mentoring.model.Ticket">
- 		 <entry key="700" value-ref="ticket700" />
- 		 <entry key="701" value-ref="ticket701" />
- 		 <entry key="702" value-ref="ticket702" />
- 		 <entry key="703" value-ref="ticket703" />
- 		 <entry key="704" value-ref="ticket704" />
- 		 <entry key="705" value-ref="ticket705" />
-	</util:map>
-        
+
     <bean id="ticketDao" class="com.epam.mentoring.dao.TicketDao">
-    	<property name="tickets"><ref bean='ticketsMap'/></property>
+    	<property name="storage"><ref bean='storage'/></property>
     </bean>
     
      <bean id="ticketService" class="com.epam.mentoring.service.impl.TicketServiceImpl"

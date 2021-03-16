@@ -10,43 +10,43 @@ import java.util.stream.Collectors;
 
 public class TicketDao {
 	private static Logger logger = LoggerFactory.getLogger(TicketDao.class);
-	private Map<Long, Ticket> tickets;
+	private Storage storage;
 
-	public Map<Long, Ticket> getTickets() {
-		return tickets;
+	public Storage getStorage() {
+		return storage;
 	}
 
-	public void setTickets(Map<Long, Ticket> tickets) {
-		this.tickets = tickets;
+	public void setStorage(Storage storage) {
+		this.storage = storage;
 	}
-	
+
 	public void addTicket(Ticket ticket) {
 		logger.debug("addTicket({}) call.", ticket);
-		tickets.put(ticket.getId(), ticket);
+		storage.getTickets().put(ticket.getId(), ticket);
 	}
 	
 	public Ticket removeTicketById(Long ticketId) {
 		logger.debug("removeTicketById({}) call.", ticketId);
-		return tickets.remove(ticketId);
+		return storage.getTickets().remove(ticketId);
 	}
 	
 	public List<Ticket> findTicketsByUserId (long userId) {
 		logger.debug("findTicketsByUserId({}) call.", userId);
-		return tickets.values().stream()
+		return storage.getTickets().values().stream()
 				.filter(ticket -> ticket.getUserId()==userId)
 				.collect(Collectors.toList());
 	}
 	
 	public List<Ticket> findTicketsByEventId (long eventId) {
 		logger.debug("findTicketsByEventId({}) call.", eventId);
-		return tickets.values().stream()
+		return storage.getTickets().values().stream()
 				.filter(ticket -> ticket.getEventId()==eventId)
 				.collect(Collectors.toList());
 	}
 
 	public boolean checkIfTicketSold (long eventId, int place) {
 		logger.debug("checkIfTicketSold({}, {}) call.", eventId, place);
-		return tickets.values().stream()
+		return storage.getTickets().values().stream()
 				.anyMatch(ticket -> ticket.getEventId() == eventId && ticket.getPlace() == place);
 	}
 

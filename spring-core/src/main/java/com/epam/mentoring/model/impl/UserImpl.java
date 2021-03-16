@@ -15,6 +15,18 @@ public class UserImpl implements User {
 	@Email(message = "Email should be valid")
 	private String email;
 
+
+	public UserImpl() {
+
+	}
+
+	public UserImpl(@Positive(message = "User id should not be less than 1") long id, @Size(min = 3, max = 50, message
+			= "Name should be between 3 and 50 characters") String name, @Email(message = "Email should be valid") String email) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+	}
+
 	@Override
 	public long getId() {
 		return id;

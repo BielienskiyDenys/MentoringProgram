@@ -42,25 +42,25 @@ class EventDaoTest {
 
         Map<Long, Event> testMap = new HashMap<>();
         testMap.put(initialEvent.getId(), initialEvent);
-        eventDao.setEvents(testMap);
+        eventDao.getStorage().setEvents(testMap);
     }
 
     @Test
     void addEvent_successful_scenario() {
         eventDao.addEvent(testEvent);
 
-        assertEquals(2, eventDao.getEvents().size());
-        assertTrue(eventDao.getEvents().containsValue(testEvent));
+        assertEquals(2, eventDao.getStorage().getEvents().size());
+        assertTrue(eventDao.getStorage().getEvents().containsValue(testEvent));
     }
 
     @Test
     void removeEvent_successful_scenario() {
-        assertTrue(eventDao.getEvents().containsValue(initialEvent));
+        assertTrue(eventDao.getStorage().getEvents().containsValue(initialEvent));
 
         eventDao.removeEventById(77777L);
 
-        assertEquals(0, eventDao.getEvents().size());
-        assertFalse(eventDao.getEvents().containsValue(initialEvent));
+        assertEquals(0, eventDao.getStorage().getEvents().size());
+        assertFalse(eventDao.getStorage().getEvents().containsValue(initialEvent));
     }
 
 
@@ -73,18 +73,18 @@ class EventDaoTest {
 
     @Test
     void updateEvent_successful_scenario() {
-        assertEquals("initialEvent", eventDao.getEvents().get(77777L).getTitle());
+        assertEquals("initialEvent", eventDao.getStorage().getEvents().get(77777L).getTitle());
         testEvent.setId(77777L);
 
         Event receivedEvent = eventDao.updateEvent(testEvent);
 
         assertEquals(testEvent, receivedEvent);
-        assertEquals(TEST_EVENT_TITLE, eventDao.getEvents().get(77777L).getTitle());
+        assertEquals(TEST_EVENT_TITLE, eventDao.getStorage().getEvents().get(77777L).getTitle());
     }
 
     @Test
     void findEventsByTitle_successful_scenario() {
-        eventDao.getEvents().put(testEvent.getId(), testEvent);
+        eventDao.getStorage().getEvents().put(testEvent.getId(), testEvent);
 
         List<Event> receivedEvents = eventDao.findEventsByTitle("Event");
 
@@ -95,7 +95,7 @@ class EventDaoTest {
 
     @Test
     void findEventsByDate_successful_scenario() {
-        eventDao.getEvents().put(testEvent.getId(), testEvent);
+        eventDao.getStorage().getEvents().put(testEvent.getId(), testEvent);
         Date dateToSearch = Date.from(Instant.parse("2020-11-11T20:30:00.000Z"));
 
         List<Event> receivedEvents = eventDao.findEventsByDate(dateToSearch);
