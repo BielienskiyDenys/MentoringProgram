@@ -8,14 +8,23 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class TicketImpl implements Ticket {
+	@NotNull
 	@Positive(message = "Ticket id should not be less than 1")
 	private long id;
+
+	@NotNull
 	@Positive(message = "Event id should not be less than 1")
 	private long eventId;
+
+	@NotNull
 	@Positive(message = "User id should not be less than 1")
 	private long userId;
+
+	@NotNull
 	@NotNull(message = "Ticket category should be provided")
 	private Category category;
+
+	@NotNull
 	@Min(value = 1, message = "Place number should be greater than 1")
 	@Max(value = 500, message = "Place number should be less than 500")
 	private int place;

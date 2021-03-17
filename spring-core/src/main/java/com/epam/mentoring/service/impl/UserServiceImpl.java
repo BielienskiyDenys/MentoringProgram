@@ -90,9 +90,6 @@ public class UserServiceImpl implements UserService {
 		for (ConstraintViolation<User> violation : violations) {
 			logger.error(violation.getMessage());
 		}
-		if (violations.isEmpty()) {
-			return true;
-		}
-		return false;
+		return violations.isEmpty();
 	}
 }

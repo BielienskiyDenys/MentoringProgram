@@ -36,7 +36,7 @@ public class TicketServiceImpl implements TicketService {
 		if (userId <= 0 || eventId <= 0 || place <= 0 || place>300 ||category == null) {
 			logger.error("addTicket({}, {}, {}, {}) call. Invalid fields.", userId, eventId, place,
 					category);
-			return new TicketImpl();
+			return null;
 		}
 		if (userDao.findUserById(userId)!=null && eventDao.findEventById(eventId)!=null && !ticketDao.checkIfTicketSold(eventId, place)) {
 		Ticket ticket = new TicketImpl(userId, eventId, place, category);
@@ -48,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
 
 		logger.error("addTicket({}, {}, {}, {}) call. Failed to create ticket.", userId, eventId, place,
 				category);
-		return new TicketImpl();
+		return null;
 	}
 	
 	public boolean removeTicketById(Long ticketId) {

@@ -51,13 +51,7 @@ public class EventServiceImpl implements EventService {
 
     public Event findEventById(long eventId) {
         logger.debug("findEventById({}) call. Readressing to repository.", eventId);
-        Event event = eventDao.findEventById(eventId);
-        if( event == null) {
-            logger.error("findEventById({}) call. No event found.", eventId);
-            event = new EventImpl();
-            event.setTitle("No such event");
-        }
-        return event;
+        return eventDao.findEventById(eventId);
     }
 
     public List<Event> findEventsByTitle(String title) {
@@ -85,10 +79,7 @@ public class EventServiceImpl implements EventService {
         for (ConstraintViolation<Event> violation : violations) {
             logger.error(violation.getMessage());
         }
-        if (violations.isEmpty()) {
-            return true;
-        }
-        return false;
+        return violations.isEmpty();
     }
 
 }

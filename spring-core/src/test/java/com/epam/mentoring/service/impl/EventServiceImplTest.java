@@ -50,10 +50,11 @@ class EventServiceImplTest {
         doNothing().when(eventDao).addEvent(any(Event.class));
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(null);
 
-        eventService.addEvent(testEvent);
+        boolean result = eventService.addEvent(testEvent);
 
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(1)).addEvent(eq(testEvent));
+        assertTrue(result);
     }
 
     @Test
@@ -71,10 +72,11 @@ class EventServiceImplTest {
     void addEvent_verification_exception_thrown() {
         testEvent.setDate(null);
 
-        eventService.addEvent(testEvent);
+        boolean result = eventService.addEvent(testEvent);
 
-        verify(eventDao, times(1)).findEventById(anyLong());
-        verify(eventDao, times(1)).addEvent(any(Event.class));
+        verify(eventDao, times(0)).findEventById(anyLong());
+        verify(eventDao, times(0)).addEvent(any(Event.class));
+        assertFalse(result);
     }
 
     @Test
@@ -82,10 +84,11 @@ class EventServiceImplTest {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
         when(eventDao.removeEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
 
-        eventService.removeEventById(TEST_EVENT_ID);
+        boolean result = eventService.removeEventById(TEST_EVENT_ID);
 
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
         verify(eventDao, times(1)).removeEventById(eq(TEST_EVENT_ID));
+        assertTrue(result);
     }
 
     @Test
@@ -103,9 +106,10 @@ class EventServiceImplTest {
     void findEventById_successful_scenario() {
         when(eventDao.findEventById(eq(TEST_EVENT_ID))).thenReturn(testEvent);
 
-        eventService.findEventById(TEST_EVENT_ID);
+        Event event = eventService.findEventById(TEST_EVENT_ID);
 
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
+        assertEquals(testEvent, event);
     }
 
     @Test
@@ -114,8 +118,7 @@ class EventServiceImplTest {
 
          Event event = eventService.findEventById(TEST_EVENT_ID);
 
-        assertNotNull(event);
-        assertEquals("No such event", event.getTitle());
+        assertNull(event);
         verify(eventDao, times(1)).findEventById(eq(TEST_EVENT_ID));
     }
 

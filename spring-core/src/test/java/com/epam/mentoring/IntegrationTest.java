@@ -28,13 +28,13 @@ public class IntegrationTest {
 
     @Test
     public void registered_user_books_ticket_for_valid_event() throws Exception {
-        User user = bookingFacade.getUserById(333L);
-        assertEquals("Peter", user.getName());
+        User user = bookingFacade.getUserById(377L);
+        assertEquals("Steve", user.getName());
 
         Event event = bookingFacade.getEventById(10L);
         assertEquals("January Event", event.getTitle());
 
-        Ticket ticket = bookingFacade.bookTicket(333L, 10L, 50, Ticket.Category.BAR );
+        Ticket ticket = bookingFacade.bookTicket(377L, 10L, 43, Ticket.Category.BAR );
         assertNotNull(ticket);
     }
 
@@ -45,8 +45,7 @@ public class IntegrationTest {
         assertEquals(10L, userOneTicket.getEventId());
 
         Ticket userTwoTicket = bookingFacade.bookTicket(344L, 10L, 50, Ticket.Category.BAR );
-        assertEquals(0, userTwoTicket.getUserId());
-        assertEquals(0, userTwoTicket.getEventId());
+        assertNull(userTwoTicket);
     }
 
     @Test
@@ -60,8 +59,7 @@ public class IntegrationTest {
         assertEquals(testUser, receivedUser);
 
         Ticket ticket = bookingFacade.bookTicket(666L, 1000L, 50, Ticket.Category.BAR );
-        assertEquals(0, ticket.getUserId());
-        assertEquals(0, ticket.getEventId());
+        assertNull(ticket);
     }
 
     @Test

@@ -110,9 +110,7 @@ public class BookingFacadeImpl implements BookingFacade {
             return user;
         }
         logger.error("createUser({}) call. Failed to create user.", user);
-        user = new UserImpl();
-        user.setName("No such user.");
-        return user;
+        return null;
     }
 
     @Override
@@ -121,10 +119,8 @@ public class BookingFacadeImpl implements BookingFacade {
             logger.debug("updateUser({}) call. User updated.", user);
             return user;
         }
-        user = new UserImpl();
-        user.setName("No such user.");
         logger.error("updateUser({}) call. Failed to update user.", user);
-        return user;
+        return null;
     }
 
     @Override
