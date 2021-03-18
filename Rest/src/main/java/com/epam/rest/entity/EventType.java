@@ -1,8 +1,8 @@
-package com.epam.rest;
+package com.epam.rest.entity;
 
 public enum EventType {
     LECTION,
     EXHIBITION,
     PERFORMANCE,
-    AUTOGRAPH_SESSION
+    BOOK_PRESENTATION
 }

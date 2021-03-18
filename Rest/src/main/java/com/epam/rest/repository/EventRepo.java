@@ -1,6 +1,6 @@
-package com.epam.rest.repositories;
+package com.epam.rest.repository;
 
-import com.epam.rest.Event;
+import com.epam.rest.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

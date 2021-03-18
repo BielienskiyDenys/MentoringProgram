@@ -1,10 +1,10 @@
-package com.epam.rest;
+package com.epam.rest.exception;
 
 public class EventNotFoundException extends RuntimeException {
-    EventNotFoundException() {
+    public EventNotFoundException() {
         super("Could not find any event");
     }
-    EventNotFoundException(long id) {
+    public EventNotFoundException(long id) {
         super("Could not find event " + id);
     }
 }

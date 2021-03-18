@@ -1,4 +1,5 @@
 INSERT INTO events (id, title, place_id, speaker, event_type_id, date )VALUES
-(1, 'First event', 3, 'First speaker', 2, '2021-03-18 14.30.00.000'),
-(2, 'Second event', 4, 'Second speaker', 0, '2021-03-18 14.30.00.000'),
-(3, 'Third event', 6, 'Third speaker', 1, '2021-03-18 14.30.00.000');
+(1, 'How to wright calligraphy with any pen', 3, 'Yagami Light', 0, '2021-03-24 14.30.00.000'),
+(2, 'Digging. Mining. Fighting the power.', 4, 'Giha Simon', 2, '2021-04-18 17.00.00.000'),
+(3, 'Using AT-fields when piloting EVA', 6, 'Langley Asuka', 0, '2021-04-15 15.30.00.000'),
+(4, 'Helmets. Cloaks. Two smoking knightmares.', 4, 'Lamperouge Lelouch', 3, '2021-03-24 15.30.00.000');

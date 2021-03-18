@@ -1,4 +1,4 @@
-package com.epam.rest;
+package com.epam.rest.entity;
 
 public enum Place {
     MERCURY_HALL,
