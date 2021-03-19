@@ -2,7 +2,6 @@ package com.epam.rest.controller;
 
 import java.util.List;
 
-import com.epam.rest.exception.EventNotFoundException;
 import com.epam.rest.entity.Event;
 import com.epam.rest.repository.EventRepo;
 import com.epam.rest.service.EventService;
