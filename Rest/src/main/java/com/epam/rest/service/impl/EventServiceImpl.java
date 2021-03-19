@@ -6,8 +6,8 @@ import com.epam.rest.repository.EventRepo;
 import com.epam.rest.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -15,7 +15,7 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private EventRepo eventRepo;
 
-    public Event createEvent(Event event){
+    public Event createEvent(Event event) {
         return eventRepo.save(event);
     }
 
@@ -26,20 +26,20 @@ public class EventServiceImpl implements EventService {
         eventRepo.save(event);
         return event;
     }
+
     public Event getEvent(long eventId) {
-        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
-        return event;
+        return eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
     }
 
     @Transactional
-    public Event deleteEvent(long eventId){
+    public Event deleteEvent(long eventId) {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         eventRepo.deleteById(eventId);
         return event;
     }
 
     public List<Event> getAllEvents() {
-       return eventRepo.findAll();
+        return eventRepo.findAll();
     }
 
     public List<Event> getAllEventsByTitle(String title) {

@@ -15,12 +15,10 @@ import java.util.Date;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private long id;
 
     @NotNull(message = "Title should be present")
     @Size(min = 3, max = 50, message = "Title should be between 3 and 50 characters")
-    @Column(name = "title")
     private String title;
 
     @NotNull(message = "Place should be present")
@@ -28,7 +26,6 @@ public class Event {
     private Place place;
 
     @Size(min = 3, max = 50, message = "Title should be between 3 and 50 characters")
-    @Column(name = "speaker")
     private String speaker;
 
     @NotNull(message = "Event type should be present")

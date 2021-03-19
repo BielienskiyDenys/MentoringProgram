@@ -3,7 +3,7 @@ info:
   title: "Rest module task."
   description: "EPAM Java mentoring program 2021. Rest-api application, for demonstration of learnt material."
   version: "1.0.0"
-host: "localhost:8080"
+host: "http://localhost:8080"
 tags:
   - name: "events"
     description: "Interface to interact with events."
