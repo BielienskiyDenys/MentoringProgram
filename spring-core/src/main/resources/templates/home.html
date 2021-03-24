@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="EN">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<form action="/events">
+    <label for="event-id">Event Id:</label>
+    <input type="number" id="event-id" name="event-id"><br>
+    <input type="submit">
+</form>
+
+<form action="/events/day">
+    <label for="day">Date:</label>
+    <input type="date" id="day" name="day"><br>
+    <input type="number" id="page-size" name="page-size" value="10"><br>
+    <input type="number" id="page-num" name="page-num" value="0"><br>
+    <input type="submit">
+</form>
+
+<form action="/events/title">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title"><br>
+    <input type="number" name="page-size" value="10"><br>
+    <input type="number" name="page-num" value="0"><br>
+    <input type="submit">
+</form>
+
+
+<form action="/events" method="post">
+    <label for="title">Event:</label>
+    <input type="number" name="event-id"><br>
+    <input type="text" name="event-title"><br>
+    <input type="datetime-local" name="event-date-time"><br>
+    <input type="submit">
+</form>
+
+</body>
+</html>

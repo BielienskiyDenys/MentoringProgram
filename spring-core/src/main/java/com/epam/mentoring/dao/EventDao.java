@@ -58,7 +58,7 @@ public class EventDao {
 	}
 	
 	private LocalDate trimTime(Date date) {
-		return date.toInstant().atZone(ZoneId.of("Etc/UTC")).toLocalDate();
+		return date.toInstant().atZone(ZoneId.of("Etc/GMT-2")).toLocalDate();
 	}
 
 }

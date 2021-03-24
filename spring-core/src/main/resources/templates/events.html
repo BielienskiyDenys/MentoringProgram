@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="EN">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<tbody>
+<tr th:if="${eventsList.empty}">
+    <td colspan="2"> No events Available </td>
+</tr>
+<tr th:each="event : ${eventsList}">
+    <td><span th:text="${event.getId()}"> Id </span></td>
+    <td><span th:text="${event.getTitle()}"> Title </span></td>
+    <td><span th:text="${event.getDate()}"> Date </span></td>
+    <br>
+</tr>
+</tbody>
+
+<a href="/">Home</a>
+
+</body>
+</html>
