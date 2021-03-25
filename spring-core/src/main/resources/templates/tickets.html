@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="EN">
+<head>
+    <title>Module 05 SpringMVC Tickets</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<tbody>
+<div th:if="${ticketsMessage != null}">
+    <span th:text="${ticketsMessage}"> Message </span>
+</div>
+
+<div th:if="${ticketsList != null}">
+    <tr th:if="${ticketsList.empty}">
+        <td colspan="2"> No tickets Available</td>
+    </tr>
+    <tr th:each="ticket : ${ticketsList}">
+        <td><span th:text="${ticket.getId()}"> Id </span></td>
+        <td><span th:text="${ticket.getEventId()}"> Event Id </span></td>
+        <td><span th:text="${ticket.getUserId()}"> User Id </span></td>
+        <td><span th:text="${ticket.getCategory()}"> Category </span></td>
+        <td><span th:text="${ticket.getPlace()}"> Place </span></td>
+        <br>
+    </tr>
+</div>
+</tbody>
+
+<a href="/">Home</a>
+
+</body>
+</html>

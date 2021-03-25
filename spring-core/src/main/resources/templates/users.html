@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="EN">
+<head>
+    <title>Module 05 SpringMVC Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<tbody>
+<div th:if="${usersMessage != null}">
+    <span th:text="${usersMessage}"> Message </span>
+</div>
+
+<div th:if="${usersList != null}">
+    <tr th:if="${usersList.empty}">
+        <td colspan="2"> No users Available</td>
+    </tr>
+    <tr th:each="user : ${usersList}">
+        <td><span th:text="${user.getId()}"> Id </span></td>
+        <td><span th:text="${user.getName()}"> Title </span></td>
+        <td><span th:text="${user.getEmail()}"> Date </span></td>
+        <br>
+    </tr>
+</div>
+</tbody>
+
+<a href="/">Home</a>
+
+</body>
+</html>

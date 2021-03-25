@@ -6,10 +6,7 @@ import com.epam.mentoring.model.impl.EventImpl;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +22,7 @@ public class EventController {
     private BookingFacade bookingFacade = (new ClassPathXmlApplicationContext("beans.xml")).getBean("bookingFacade", BookingFacade.class);
 
     @GetMapping
-    public String getAllEvents(@RequestParam(name="event-id") long eventId, Model model) {
+    public String getEventById(@RequestParam(name="event-id") long eventId, Model model) {
         List<Event> events = new ArrayList<>();
         Event event = bookingFacade.getEventById(eventId);
         if (event != null) {
@@ -79,6 +76,40 @@ public class EventController {
 
         model.addAttribute("eventsList", events);
 
+        return "events";
+    }
+
+    @PostMapping("/update")
+    public String updateEvent(@RequestParam(name = "event-id") long eventId,
+                              @RequestParam(name = "event-title") String eventTitle,
+                              @RequestParam(name = "event-date-time") String eventDateTimeStr,
+                              Model model) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date eventDateTime =format.parse(eventDateTimeStr);
+        Event event = new EventImpl();
+        event.setId(eventId);
+        event.setTitle(eventTitle);
+        event.setDate(eventDateTime);
+
+        Event newEvent = bookingFacade.updateEvent(event);
+        if (newEvent==null) {
+            model.addAttribute("eventsMessage", "Event update failure.");
+        } else {
+            List<Event> events = new ArrayList<>();
+            events.add(newEvent);
+            model.addAttribute("eventsList", events);
+        }
+        return "events";
+    }
+
+    @PostMapping("/delete")
+    public String deleteEvent(@RequestParam(name = "event-id") long eventId,
+                              Model model){
+        if(bookingFacade.deleteEvent(eventId)) {
+            model.addAttribute("eventsMessage", "Successfully deleted event with id: " + eventId);
+        } else {
+            model.addAttribute("eventsMessage", "Failed to delete event with id: " + eventId);
+        }
         return "events";
     }
 

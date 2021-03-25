@@ -74,7 +74,9 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public Event updateEvent(Event event) {
-        eventService.updateEvent(event);
+        if(!eventService.updateEvent(event)) {
+            return null;
+        };
         logger.debug("updateEvent({}) call.", event);
         return event;
     }
@@ -168,4 +170,6 @@ public class BookingFacadeImpl implements BookingFacade {
     public boolean cancelTicket(long ticketId) {
         return ticketService.removeTicketById(ticketId);
     }
+
+
 }

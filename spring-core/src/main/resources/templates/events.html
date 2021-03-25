@@ -1,21 +1,27 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="EN">
 <head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Module 05 SpringMVC Events</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 
 <tbody>
-<tr th:if="${eventsList.empty}">
-    <td colspan="2"> No events Available </td>
-</tr>
-<tr th:each="event : ${eventsList}">
-    <td><span th:text="${event.getId()}"> Id </span></td>
-    <td><span th:text="${event.getTitle()}"> Title </span></td>
-    <td><span th:text="${event.getDate()}"> Date </span></td>
-    <br>
-</tr>
+<div th:if="${eventsMessage != null}">
+    <span th:text="${eventsMessage}"> Id </span>
+</div>
+
+<div th:if="${eventsList != null}">
+    <tr th:if="${eventsList.empty}">
+        <td colspan="2"> No events Available</td>
+    </tr>
+    <tr th:each="event : ${eventsList}">
+        <td><span th:text="${event.getId()}"> Id </span></td>
+        <td><span th:text="${event.getTitle()}"> Title </span></td>
+        <td><span th:text="${event.getDate()}"> Date </span></td>
+        <br>
+    </tr>
+</div>
 </tbody>
 
 <a href="/">Home</a>

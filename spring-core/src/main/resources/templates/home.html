@@ -1,41 +1,186 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="EN">
 <head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Module 05 SpringMVC Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
+<table>
+    <tr>
+        <td>
+            <h5>Events</h5>
+            <form action="/events">
+                <p>Find Event by id:</p>
+                <label>Event Id:</label>
+                <input type="number" name="event-id"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/events/day">
+                <p>Find Events by date:</p>
+                <label>Date:</label>
+                <input type="date" name="day"><br>
+                <label>Page size:</label>
+                <input type="number" name="page-size" value="10"><br>
+                <label>Page num:</label>
+                <input type="number" name="page-num" value="0"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/events/title">
+                <p>Find Events by title:</p>
+                <label>Title:</label>
+                <input type="text" name="title"><br>
+                <label>Page size:</label>
+                <input type="number" name="page-size" value="10"><br>
+                <label>Page num:</label>
+                <input type="number" name="page-num" value="0"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/events" method="post">
+                <p>Create Event:</p>
+                <label>Event:</label>
+                <input type="number" name="event-id"><br>
+                <label>Title:</label>
+                <input type="text" name="event-title"><br>
+                <label>Date and time:</label>
+                <input type="datetime-local" name="event-date-time"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/events/update" method="post">
+                <p>Update Event:</p>
+                <label>Event Id:</label>
+                <input type="number" name="event-id"><br>
+                <label>Title:</label>
+                <input type="text" name="event-title"><br>
+                <label>Date and time:</label>
+                <input type="datetime-local" name="event-date-time"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/events/delete" method="post">
+                <p>Delete Event by id:</p>
+                <label>Event Id:</label>
+                <input type="number" name="event-id"><br>
+                <input type="submit">
+            </form>
+        </td>
 
-<form action="/events">
-    <label for="event-id">Event Id:</label>
-    <input type="number" id="event-id" name="event-id"><br>
-    <input type="submit">
-</form>
+        <td>
+            <h5>Users</h5>
+            <form action="/users/id">
+                <p>Find User by id:</p>
+                <label>User Id:</label>
+                <input type="number" name="user-id"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/users/email">
+                <p>Find User by email:</p>
+                <label>User email:</label>
+                <input type="email" name="email"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/users/name">
+                <p>Find Users by name:</p>
+                <label>Name:</label>
+                <input type="text" name="name"><br>
+                <label>Page Size:</label>
+                <input type="number" name="page-size" value="10"><br>
+                <label>Page Num:</label>
+                <input type="number" name="page-num" value="0"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/users" method="post">
+                <p>Create User:</p>
+                <label> User:</label>
+                <label>User Id:</label>
+                <input type="number" name="user-id"><br>
+                <label>Name:</label>
+                <input type="text" name="user-name"><br>
+                <label>Email:</label>
+                <input type="email" name="email"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/users/update" method="post">
+                <p>Update User:</p>
+                <label>User Id:</label>
+                <input type="number" name="user-id"><br>
+                <label>Name:</label>
+                <input type="text" name="user-name"><br>
+                <label>Email:</label>
+                <input type="email" name="email"><br>
+                <input type="submit">
+            </form>
+            <br>
+            <form action="/users/delete" method="post">
+                <p>Delete User by id:</p>
+                <label>User Id:</label>
+                <input type="number" name="user-id"><br>
+                <input type="submit">
+            </form>
+        </td>
 
-<form action="/events/day">
-    <label for="day">Date:</label>
-    <input type="date" id="day" name="day"><br>
-    <input type="number" id="page-size" name="page-size" value="10"><br>
-    <input type="number" id="page-num" name="page-num" value="0"><br>
-    <input type="submit">
-</form>
+        <td>
+            <h5>Tickets</h5>
+            <form action="/tickets" method="post">
+                <p>Book ticket:</p>
+                <label> User Id:</label>
+                <input type="number" name="user-id"><br>
+                <label> Event Id:</label>
+                <input type="number" name="event-id"><br>
+                <label> Place:</label>
+                <input type="number" name="place"><br>
+                <label> Category:</label>
+                <select name="category-id" size="1">
+                    <option value="0">Standard</option>
+                    <option value="1">Bar</option>
+                    <option value="2">Premium</option>
+                </select><br>
+                <input type="submit">
+            </form>
 
-<form action="/events/title">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title"><br>
-    <input type="number" name="page-size" value="10"><br>
-    <input type="number" name="page-num" value="0"><br>
-    <input type="submit">
-</form>
+            <form action="/tickets/find">
+                <p>Find tickets:</p>
+                <label>Search criteria:</label>
+                <select name="criteria" size="1">
+                    <option value="user">User id</option>
+                    <option value="event">Event id</option>
+                </select><br>
+                <label>Id:</label>
+                <input type="number" name="entity-id"><br>
+                <label>Page size:</label>
+                <input type="number" name="page-size" value="10"><br>
+                <label>Page num:</label>
+                <input type="number" name="page-num" value="0"><br>
+                <input type="submit">
+            </form>
 
+            <form action="/tickets/getpdf">
+                <p>Find tickets, pdf:</p>
+                <label>Search criteria:</label>
+                <select name="criteria" size="1">
+                    <option value="user">User id</option>
+                    <option value="event">Event id</option>
+                </select><br>
+                <label>Id:</label>
+                <input type="number" name="entity-id"><br>
+                <input type="submit">
+            </form>
 
-<form action="/events" method="post">
-    <label for="title">Event:</label>
-    <input type="number" name="event-id"><br>
-    <input type="text" name="event-title"><br>
-    <input type="datetime-local" name="event-date-time"><br>
-    <input type="submit">
-</form>
-
+            <form action="/tickets/delete" method="post">
+                <p>Delete Ticket by id:</p>
+                <label>Ticket Id:</label>
+                <input type="number" name="ticket-id"><br>
+                <input type="submit">
+            </form>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
