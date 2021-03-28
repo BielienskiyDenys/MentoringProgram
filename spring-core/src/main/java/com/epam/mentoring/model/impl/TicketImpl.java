@@ -6,7 +6,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name="ticket")
 public class TicketImpl implements Ticket {
 	@NotNull
 	@Positive(message = "Ticket id should not be less than 1")

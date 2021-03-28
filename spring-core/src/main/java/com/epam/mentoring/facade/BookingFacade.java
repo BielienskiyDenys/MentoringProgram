@@ -164,4 +164,5 @@ public interface BookingFacade {
 	 */
 	boolean cancelTicket(long ticketId);
 
+	void uploadBatch();
 }

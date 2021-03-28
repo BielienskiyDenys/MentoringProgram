@@ -138,5 +138,11 @@ public class TicketController {
         return "tickets";
     }
 
+    @PostMapping("/batch")
+    public String uploadBatch(Model model) {
+
+        return "tickets";
+    }
+
 
 }

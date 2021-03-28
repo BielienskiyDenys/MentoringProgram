@@ -12,6 +12,8 @@ import com.epam.mentoring.service.TicketService;
 import com.epam.mentoring.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,9 @@ public class BookingFacadeImpl implements BookingFacade {
     UserService userService;
     EventService eventService;
     TicketService ticketService;
+
+    @Autowired
+    private ApplicationContext context;
 
     public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService) {
         this.userService = userService;
@@ -171,5 +176,9 @@ public class BookingFacadeImpl implements BookingFacade {
         return ticketService.removeTicketById(ticketId);
     }
 
+    @Override
+    public void uploadBatch() {
+
+    }
 
 }
