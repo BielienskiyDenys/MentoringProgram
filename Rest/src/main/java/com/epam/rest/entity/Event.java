@@ -4,11 +4,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @Entity
 @Getter
 @Setter
+@Data
+@XmlRootElement(name = "Event")
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "events")

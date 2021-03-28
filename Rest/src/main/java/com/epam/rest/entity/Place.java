@@ -7,6 +7,7 @@ public enum Place {
     MARS_HALL,
     JUPITER_HALL,
     SATURN_HALL,
+    URANUS_HALL,
     NEPTUNE_HALL,
     PLUTO_HALL
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<events>
+    <event>
+        <id>6</id>
+        <title>SIG Sauer and me</title>
+        <place>MERCURY_HALL</place>
+        <speaker>Henrietta</speaker>
+        <eventType>PERFORMANCE</eventType>
+        <dateTime>2021-08-21T19:00:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>6</id>
+        <title>Jesus Christ is in Heaven Now</title>
+        <place>VENUS_HALL</place>
+        <speaker>Alucard</speaker>
+        <eventType>BOOK_PRESENTATION</eventType>
+        <dateTime>2021-09-10T16:30:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>7</id>
+        <title>Transmutation circle and deadly sins.</title>
+        <place>EARTH_HALL</place>
+        <speaker>Edward Elric</speaker>
+        <eventType>LECTION</eventType>
+        <dateTime>2021-09-13T17:30:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>8</id>
+        <title>Ghosts in my shell.</title>
+        <place>MARS_HALL</place>
+        <speaker>Motoko Kusunagi</speaker>
+        <eventType>BOOK_PRESENTATION</eventType>
+        <dateTime>2021-08-23T20:00:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>9</id>
+        <title>Fly me to the moon</title>
+        <place>JUPITER_HALL</place>
+        <speaker>Frank</speaker>
+        <eventType>EXHIBITION</eventType>
+        <dateTime>2021-08-24T12:00:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>10</id>
+        <title>Going back to Saturn where the rings all glow</title>
+        <place>SATURN_HALL</place>
+        <speaker>Stevie</speaker>
+        <eventType>BOOK_PRESENTATION</eventType>
+        <dateTime>2021-08-27T17:00:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>11</id>
+        <title>Otaku and their attributes</title>
+        <place>URANUS_HALL</place>
+        <speaker>Konata Izumi</speaker>
+        <eventType>EXHIBITION</eventType>
+        <dateTime>2021-07-30T21:00:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>12</id>
+        <title>Aliens, time travelers, espers, and sliders.</title>
+        <place>NEPTUNE_HALL</place>
+        <speaker>Haruhi Suzumiya</speaker>
+        <eventType>LECTION</eventType>
+        <dateTime>2021-07-29T18:30:00.000Z</dateTime>
+    </event>
+    <event>
+        <id>13</id>
+        <title>When do seagulls cry?</title>
+        <place>PLUTO_HALL</place>
+        <speaker>Beatrice</speaker>
+        <eventType>PERFORMANCE</eventType>
+        <dateTime>2021-08-04T23:45:00.000Z</dateTime>
+    </event>
+</events>
