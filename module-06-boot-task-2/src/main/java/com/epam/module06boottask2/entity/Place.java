@@ -1,0 +1,13 @@
+package com.epam.module06boottask2.entity;
+
+public enum Place {
+    MERCURY_HALL,
+    VENUS_HALL,
+    EARTH_HALL,
+    MARS_HALL,
+    JUPITER_HALL,
+    SATURN_HALL,
+    URANUS_HALL,
+    NEPTUNE_HALL,
+    PLUTO_HALL
+}
