@@ -17,8 +17,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter{
 
-    private String clientId = "pixeltrice";
-    private String clientSecret = "pixeltrice-secret-key";
+    private String clientId = "client-id";
+    private String clientSecret = "client-secret";
     private String privateKey =
             "-----BEGIN RSA PRIVATE KEY-----\n" +
                     "MIIEpAIBAAKCAQEAxCXhvSqq1m2m7co5sZNaXTdb8O5imAZV99ebUhVUZLzMw4we\n" +
