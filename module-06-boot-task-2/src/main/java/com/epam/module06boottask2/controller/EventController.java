@@ -11,9 +11,6 @@ import java.util.List;
 @RestController
 public class EventController {
     @Autowired
-    private EventRepo eventRepo;
-
-    @Autowired
     private EventService eventService;
 
     @GetMapping("/events/{eventId}")
