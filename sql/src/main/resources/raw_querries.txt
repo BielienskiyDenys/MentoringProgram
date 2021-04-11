@@ -1,0 +1,49 @@
+CREATE DATABASE module07;
+
+\c module07;
+
+CREATE TABLE students (
+id SERIAL PRIMARY KEY,
+name VARCHAR(50) NOT NULL,
+surname VARCHAR(50) NOT NULL,
+date_of_birth DATE,
+phone_numbers VARCHAR(100),
+primary_skill VARCHAR(50) NOT NULL,
+created_datetime TIMESTAMP NOT NULL DEFAULT NOW(),
+updated_datetime TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE subjects (
+id SERIAL PRIMARY KEY,
+name VARCHAR(50) NOT NULL,
+tutor VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE results (
+id SERIAL PRIMARY KEY,
+student_id int4 NOT NULL REFERENCES students(id),
+subject_id int4 NOT NULL REFERENCES subjects(id),
+mark smallint NOT NULL
+);
+
+CREATE INDEX btree_index ON students USING BTREE(surname);
+CREATE INDEX hash_index ON students USING HASH(surname);
+CREATE INDEX gin_index ON students USING GIN(to_tsvector('english'::regconfig, surname));
+CREATE INDEX gist_index ON students USING GIST(to_tsvector('english'::regconfig, surname));
+
+DROP INDEX btree_index;
+DROP INDEX hash_index;
+DROP INDEX gin_index;
+DROP INDEX gist_index;
+
+DELETE FROM students;
+
+INSERT INTO students (name, surname, date_of_birth, phone_numbers, primary_skill) VALUES ('Ivan', 'Ivanov', '2000-10-01', '+380950950950', 'skill_one'), ('Petr', 'Petrov', '2000-10-01', '+380950950950', 'skill_two');
+
+SELECT * FROM students WHERE name='Arkell';
+SELECT * FROM students WHERE id>99997;
+
+
+DROP TABLE results;
+DROP TABLE subjects;
+DROP TABLE students;

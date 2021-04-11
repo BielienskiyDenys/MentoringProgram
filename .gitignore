@@ -1,4 +1,8 @@
 target/
+/Rest
+/spring-core
+/module-06-boot-task-1
+/module-06-boot-task-2
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
