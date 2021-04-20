@@ -46,6 +46,8 @@
                 <input type="text" name="event-title"><br>
                 <label>Date and time:</label>
                 <input type="datetime-local" name="event-date-time"><br>
+                <label>Ticket Price:</label>
+                <input type="number" name="ticket-price"><br>
                 <input type="submit">
             </form>
             <br>
@@ -161,24 +163,32 @@
                 <input type="submit">
             </form>
 
-            <form action="/tickets/getpdf">
-                <p>Find tickets, pdf:</p>
-                <label>Search criteria:</label>
-                <select name="criteria" size="1">
-                    <option value="user">User id</option>
-                    <option value="event">Event id</option>
-                </select><br>
-                <label>Id:</label>
-                <input type="number" name="entity-id"><br>
-                <input type="submit">
-            </form>
-
             <form action="/tickets/delete" method="post">
                 <p>Delete Ticket by id:</p>
                 <label>Ticket Id:</label>
                 <input type="number" name="ticket-id"><br>
                 <input type="submit">
             </form>
+        </td>
+
+        <td>
+            <h5>Accounts</h5>
+            <form action="/accounts" method="get">
+                <p>Check balance for user:</p>
+                <label> User Id:</label>
+                <input type="number" name="user-id"><br>
+                <input type="submit">
+            </form>
+
+            <form action="/accounts/add" method="post">
+                <p>Charge balance for user:</p>
+                <label> User Id:</label>
+                <input type="number" name="user-id"><br>
+                <label> Amount:</label>
+                <input type="number" name="amount"><br>
+                <input type="submit">
+            </form>
+
         </td>
     </tr>
 </table>

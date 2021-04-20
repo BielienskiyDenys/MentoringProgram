@@ -1,22 +1,67 @@
 package com.epam.mentoring.model;
 
-/**
- * Created by maksym_govorischev on 14/03/14.
- */
-public interface User {
-    /**
-     * User Id. UNIQUE.
-     * @return User Id.
-     */
-    long getId();
-    void setId(long id);
-    String getName();
-    void setName(String name);
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
-    /**
-     * User email. UNIQUE.
-     * @return User email.
-     */
-    String getEmail();
-    void setEmail(String email);
+@Entity
+@Table(name = "users")
+public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@NotNull
+	@Positive(message = "User id should not be less than 1")
+	private long id;
+
+	@NotNull
+	@Size(min = 3, max = 50, message
+			= "Name should be between 3 and 50 characters")
+	private String name;
+
+	@NotNull
+	@Email(message = "Email should be valid")
+	private String email;
+
+	public User() {
+
+	}
+
+	public User(@Positive(message = "User id should not be less than 1") long id, @Size(min = 3, max = 50, message
+			= "Name should be between 3 and 50 characters") String name, @Email(message = "Email should be valid") String email) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "id=" + id + ", name=" + name + ", email=" + email;
+	}
+
 }

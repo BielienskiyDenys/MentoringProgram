@@ -1,9 +1,9 @@
 package com.epam.mentoring.service;
 
+import com.epam.mentoring.model.Event;
+
 import java.util.Date;
 import java.util.List;
-
-import com.epam.mentoring.model.Event;
 
 public interface EventService {
 	public boolean addEvent(Event event);

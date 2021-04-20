@@ -2,47 +2,51 @@ package com.epam.mentoring.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import com.epam.mentoring.model.impl.EventImpl;
+import com.epam.mentoring.model.Event;
+import com.epam.mentoring.repo.EventRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.mentoring.dao.EventDao;
-import com.epam.mentoring.model.Event;
 import com.epam.mentoring.service.EventService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+@Service
 public class EventServiceImpl implements EventService {
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    private EventDao eventDao;
+    private EventRepo eventRepo;
 
-    public EventDao getEventDao() {
-        return eventDao;
-    }
-    public void setEventDao(EventDao eventDao) {
-        this.eventDao = eventDao;
+    public EventServiceImpl(EventRepo eventRepo) {
+        this.eventRepo = eventRepo;
     }
 
+    @Transactional
     public boolean addEvent(Event event) {
-        if (validateEventFields(event) && eventDao.findEventById(event.getId()) == null) {
+        if (validateEventFields(event) && !eventRepo.findById(event.getId()).isPresent()) {
             logger.debug("addEvent({}) call. Readressing to repository.", event);
-            eventDao.addEvent(event);
+            eventRepo.save(event);
             return true;
         }
         logger.error("addEvent({}) call. Event registered already.", event);
         return false;
     }
 
+    //Не знаю, стоит ли тут добавлять транзакцию
     public boolean removeEventById(Long eventId) {
-        Event event = eventDao.findEventById(eventId);
-        if (event != null) {
+        Optional<Event> event = eventRepo.findById(eventId);
+        if (event.isPresent()) {
             logger.debug("removeEventById({}) call. Readressing to repository.", eventId);
-            eventDao.removeEventById(eventId);
+            eventRepo.deleteById(eventId);
             return true;
         }
         logger.error("removeEventById({}) call. No event found.", eventId);
@@ -51,23 +55,25 @@ public class EventServiceImpl implements EventService {
 
     public Event findEventById(long eventId) {
         logger.debug("findEventById({}) call. Readressing to repository.", eventId);
-        return eventDao.findEventById(eventId);
+        return eventRepo.findById(eventId).orElse(null);
     }
 
     public List<Event> findEventsByTitle(String title) {
         logger.debug("findEventsByTitle({}) call. Readressing to repository.", title);
-        return eventDao.findEventsByTitle(title);
+        return eventRepo.findByTitleContaining(title);
     }
 
     public List<Event> findEventsByDate(Date date) {
         logger.debug("findEventsByDate({}) call. Readressing to repository.", date);
-        return eventDao.findEventsByDate(date);
+        return eventRepo.findByDate(date);
     }
 
+    @Override
+    @Transactional
     public boolean updateEvent(Event event) {
-        if (validateEventFields(event) && eventDao.findEventById(event.getId()) != null) {
+        if (validateEventFields(event) && eventRepo.findById(event.getId()).isPresent()) {
             logger.debug("updateEvent({}) call. Readressing to repository.", event);
-            eventDao.updateEvent(event);
+            eventRepo.save(event);
             return true;
         }
         logger.error("updateEvent({}) call. Event not updated. Invalid fields or no such event in storage.", event);

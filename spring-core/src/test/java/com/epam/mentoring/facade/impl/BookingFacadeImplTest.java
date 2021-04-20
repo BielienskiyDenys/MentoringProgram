@@ -2,7 +2,6 @@ package com.epam.mentoring.facade.impl;
 
 import com.epam.mentoring.facade.BookingFacade;
 import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.impl.EventImpl;
 import com.epam.mentoring.service.EventService;
 import com.epam.mentoring.service.TicketService;
 import com.epam.mentoring.service.UserService;
@@ -27,7 +26,6 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration("classpath:beans.xml")
 class BookingFacadeImplTest {
     @Autowired
     private BookingFacade bookingFacade;
@@ -41,7 +39,7 @@ class BookingFacadeImplTest {
     @MockBean
     TicketService ticketService;
 
-    private Event testEvent = new EventImpl();
+    private Event testEvent = new Event();
 
     private final long TEST_EVENT_ID = 88888L;
     private final String TEST_EVENT_TITLE = "testEventTitle";
@@ -66,7 +64,7 @@ class BookingFacadeImplTest {
 
     @Test
     void getEventById_not_found() {
-        Event eventFromService = new EventImpl();
+        Event eventFromService = new Event();
         eventFromService.setTitle("No such event");
         when(eventService.findEventById(eq(TEST_EVENT_ID))).thenReturn(eventFromService);
 
@@ -80,7 +78,7 @@ class BookingFacadeImplTest {
     @Test
     void getEventsByTitle_successful_scenario() {
         List<Event> eventList = new ArrayList<>();
-        eventList.add(new EventImpl());
+        eventList.add(new Event());
         eventList.add(testEvent);
         when(eventService.findEventsByTitle(eq("Event"))).thenReturn(eventList);
 
@@ -104,7 +102,7 @@ class BookingFacadeImplTest {
     @Test
     void getEventsForDay_successful_scenario() {
         List<Event> eventList = new ArrayList<>();
-        eventList.add(new EventImpl());
+        eventList.add(new Event());
         eventList.add(testEvent);
         when(eventService.findEventsByDate(eq(TEST_EVENT_DATE))).thenReturn(eventList);
 

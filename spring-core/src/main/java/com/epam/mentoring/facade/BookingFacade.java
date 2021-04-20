@@ -1,9 +1,9 @@
 package com.epam.mentoring.facade;
 
+import com.epam.mentoring.model.Category;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.Ticket;
 import com.epam.mentoring.model.User;
-import com.epam.mentoring.service.UserService;
 
 import java.util.Date;
 import java.util.List;
@@ -130,7 +130,7 @@ public interface BookingFacade {
 	 * @throws java.lang.IllegalStateException if this place has already been
 	 *                                         booked.
 	 */
-	Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category);
+	Ticket bookTicket(long userId, long eventId, int place, Category category);
 
 	/**
 	 * Get all booked tickets for specified user. Tickets should be sorted by event
@@ -164,5 +164,9 @@ public interface BookingFacade {
 	 */
 	boolean cancelTicket(long ticketId);
 
-	void uploadBatch();
+	boolean chargeBalanceForUser(Long id, Double amount);
+
+	boolean chargeOffBalanceForUser(Long id, Double amount);
+
+	Double checkBalanceForUser(Long id);
 }

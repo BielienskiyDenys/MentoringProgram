@@ -1,8 +1,8 @@
 package com.epam.mentoring.service;
 
+import com.epam.mentoring.model.Category;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.Ticket.Category;
 import com.epam.mentoring.model.User;
 
 import java.util.List;

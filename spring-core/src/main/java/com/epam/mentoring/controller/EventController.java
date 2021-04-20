@@ -2,11 +2,8 @@ package com.epam.mentoring.controller;
 
 import com.epam.mentoring.facade.BookingFacade;
 import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.impl.EventImpl;
-import com.epam.mentoring.service.impl.TicketServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +21,11 @@ import java.util.List;
 public class EventController {
     private static Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    private BookingFacade bookingFacade = (new ClassPathXmlApplicationContext("beans.xml")).getBean("bookingFacade", BookingFacade.class);
+    private BookingFacade bookingFacade;
+
+    public EventController(BookingFacade bookingFacade) {
+        this.bookingFacade = bookingFacade;
+    }
 
     /**
      * Gets event by its id.
@@ -105,13 +106,15 @@ public class EventController {
     public String createEvent(@RequestParam(name = "event-id") long eventId,
                               @RequestParam(name = "event-title") String eventTitle,
                               @RequestParam(name = "event-date-time") String eventDateTimeStr,
+                              @RequestParam(name = "ticket-price") Double ticketPrice,
                               Model model) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date eventDateTime =format.parse(eventDateTimeStr);
-        Event event = new EventImpl();
+        Event event = new Event();
         event.setId(eventId);
         event.setTitle(eventTitle);
         event.setDate(eventDateTime);
+        event.setTicketPrice(ticketPrice);
 
         List<Event> events = new ArrayList<>();
 
@@ -138,7 +141,7 @@ public class EventController {
                               Model model) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date eventDateTime =format.parse(eventDateTimeStr);
-        Event event = new EventImpl();
+        Event event = new Event();
         event.setId(eventId);
         event.setTitle(eventTitle);
         event.setDate(eventDateTime);

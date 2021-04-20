@@ -1,41 +1,36 @@
 package com.epam.mentoring.facade.impl;
 
 import com.epam.mentoring.facade.BookingFacade;
+import com.epam.mentoring.model.Category;
 import com.epam.mentoring.model.Event;
 import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.Ticket.Category;
 import com.epam.mentoring.model.User;
-import com.epam.mentoring.model.impl.EventImpl;
-import com.epam.mentoring.model.impl.UserImpl;
+import com.epam.mentoring.service.AccountService;
 import com.epam.mentoring.service.EventService;
 import com.epam.mentoring.service.TicketService;
 import com.epam.mentoring.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class BookingFacadeImpl implements BookingFacade {
     private static Logger logger = LoggerFactory.getLogger(BookingFacadeImpl.class);
-    UserService userService;
-    EventService eventService;
-    TicketService ticketService;
+    private UserService userService;
+    private EventService eventService;
+    private TicketService ticketService;
+    private AccountService accountService;
 
-    @Autowired
-    private ApplicationContext context;
-
-    public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService) {
+    public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService, AccountService accountService) {
         this.userService = userService;
         this.eventService = eventService;
         this.ticketService = ticketService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -71,7 +66,7 @@ public class BookingFacadeImpl implements BookingFacade {
             logger.debug("createEvent({}) call. Event created.", event);
             return event;
         }
-        Event newEvent = new EventImpl();
+        Event newEvent = new Event();
         logger.error("createEvent({}) call. Failed to create.", event);
         newEvent.setTitle("Failed to create");
         return newEvent;
@@ -145,8 +140,13 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
+    @Transactional
     public Ticket bookTicket(long userId, long eventId, int place, Category category) {
-        return ticketService.addTicket(userId, eventId, place, category);
+        Double ticketPrice = eventService.findEventById(eventId).getTicketPrice();
+        if(accountService.chargeOff(userId, ticketPrice)) {
+            return ticketService.addTicket(userId, eventId, place, category);
+        }
+        return null;
     }
 
     @Override
@@ -177,8 +177,17 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
-    public void uploadBatch() {
-
+    public boolean chargeBalanceForUser(Long id, Double amount) {
+        return accountService.charge(id, amount);
     }
 
+    @Override
+    public boolean chargeOffBalanceForUser(Long id, Double amount) {
+        return accountService.chargeOff(id, amount);
+    }
+
+    @Override
+    public Double checkBalanceForUser(Long id) {
+        return accountService.checkBalance(id);
+    }
 }

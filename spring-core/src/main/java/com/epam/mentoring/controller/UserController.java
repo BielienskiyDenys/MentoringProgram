@@ -2,8 +2,6 @@ package com.epam.mentoring.controller;
 
 import com.epam.mentoring.facade.BookingFacade;
 import com.epam.mentoring.model.User;
-import com.epam.mentoring.model.impl.UserImpl;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +16,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private BookingFacade bookingFacade = (new ClassPathXmlApplicationContext("beans.xml")).getBean("bookingFacade", BookingFacade.class);
+    private BookingFacade bookingFacade;
+
+    public UserController(BookingFacade bookingFacade) {
+        this.bookingFacade = bookingFacade;
+    }
 
     @GetMapping("/id")
     public String getUserById(@RequestParam(name="user-id") long userId, Model model) {
@@ -60,7 +62,7 @@ public class UserController {
                               @RequestParam(name = "email") String email,
                               Model model) {
 
-        User user = new UserImpl();
+        User user = new User();
         user.setId(userId);
         user.setName(userName);
         user.setEmail(email);
@@ -76,7 +78,7 @@ public class UserController {
                              @RequestParam(name = "email") String email,
                              Model model) {
 
-        User user = new UserImpl();
+        User user = new User();
         user.setId(userId);
         user.setName(userName);
         user.setEmail(email);

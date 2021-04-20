@@ -1,111 +1,122 @@
 package com.epam.mentoring;
 
-import com.epam.mentoring.facade.BookingFacade;
-import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.User;
-import com.epam.mentoring.model.impl.EventImpl;
-import com.epam.mentoring.model.impl.UserImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.epam.mentoring.model.*;
+import com.epam.mentoring.repo.AccountRepo;
+import com.epam.mentoring.repo.EventRepo;
+import com.epam.mentoring.repo.TicketRepo;
+import com.epam.mentoring.repo.UserRepo;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
-@ContextConfiguration("classpath:beans.xml")
+@AutoConfigureMockMvc
 public class IntegrationTest {
+
     @Autowired
-    private BookingFacade bookingFacade;
+    private MockMvc mockMvc;
 
-    @Test
-    public void registered_user_books_ticket_for_valid_event() throws Exception {
-        User user = bookingFacade.getUserById(377L);
-        assertEquals("Steve", user.getName());
+    @MockBean
+    private EventRepo eventRepo;
+    @MockBean
+    private AccountRepo accountRepo;
+    @MockBean
+    private UserRepo userRepo;
+    @MockBean
+    private TicketRepo ticketRepo;
 
-        Event event = bookingFacade.getEventById(10L);
-        assertEquals("January Event", event.getTitle());
+    private Event testEvent = new Event();
+    private final long TEST_EVENT_ID = 88888L;
+    private final String TEST_EVENT_TITLE = "testEventTitle";
+    private final Date TEST_EVENT_DATE = Date.from(Instant.parse("2030-06-01T18:30:00.000Z"));
+    private final Double TEST_EVENT_PRICE = 500.0;
+    private final long TEST_USER_ID = 33333L;
+    private final String TEST_USER_NAME = "testUser";
+    private final String TEST_USER_EMAIL = "test@email.com";
+    private final User testUser = new User(TEST_USER_ID, TEST_USER_NAME, TEST_USER_EMAIL);
+    private UserAccount testUserAccount = new UserAccount(testUser);
+    private Ticket testTicket = new Ticket();
+    private final long TEST_TICKET_ID = 44444L;
+    private final int TEST_TICKET_PLACE = 50;
+    private final Category TEST_TICKET_CATEGORY = Category.STANDARD;
 
-        Ticket ticket = bookingFacade.bookTicket(377L, 10L, 43, Ticket.Category.BAR );
-        assertNotNull(ticket);
+    @BeforeEach
+    private void init() {
+        testEvent.setId(TEST_EVENT_ID);
+        testEvent.setTitle(TEST_EVENT_TITLE);
+        testEvent.setDate(TEST_EVENT_DATE);
+        testEvent.setTicketPrice(TEST_EVENT_PRICE);
+        testUserAccount.setBalance(1000.00);
+        testTicket.setId(TEST_TICKET_ID);
+        testTicket.setEventId(TEST_EVENT_ID);
+        testTicket.setUserId(TEST_USER_ID);
+        testTicket.setPlace(TEST_TICKET_PLACE);
+        testTicket.setCategory(TEST_TICKET_CATEGORY);
     }
 
     @Test
-    public void existing_user_buys_ticket_twice() {
-        Ticket userOneTicket = bookingFacade.bookTicket(333L, 10L, 50, Ticket.Category.BAR );
-        assertEquals(333L, userOneTicket.getUserId());
-        assertEquals(10L, userOneTicket.getEventId());
-
-        Ticket userTwoTicket = bookingFacade.bookTicket(344L, 10L, 50, Ticket.Category.BAR );
-        assertNull(userTwoTicket);
+    public void successful_find_event_by_id_scenario() throws Exception {
+        when(eventRepo.findById(anyLong())).thenReturn(Optional.of(testEvent));
+        this.mockMvc.perform(get("/events/?event-id=1")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("testEventTitle")));
     }
 
     @Test
-    public void new_user_buys_ticket_for_non_existing_event() {
-        User testUser = new UserImpl();
-        testUser.setId(666L);
-        testUser.setName("Thomas");
-        testUser.setEmail("catch@mouse.com");
+    public void failed_find_event_by_id_scenario() throws Exception {
+        when(eventRepo.findById(anyLong())).thenReturn(Optional.empty());
+        this.mockMvc.perform(get("/events/?event-id=1")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("No events Available")));
+    }
 
-        User receivedUser = bookingFacade.createUser(testUser);
-        assertEquals(testUser, receivedUser);
 
-        Ticket ticket = bookingFacade.bookTicket(666L, 1000L, 50, Ticket.Category.BAR );
-        assertNull(ticket);
+    @Test
+    public void successful_booking_ticket_scenario() throws Exception {
+        when(eventRepo.findById(anyLong())).thenReturn(Optional.of(testEvent));
+        when(accountRepo.findById(anyLong())).thenReturn(Optional.of(testUserAccount));
+        when(userRepo.findById(anyLong())).thenReturn(Optional.of(testUser));
+        when(ticketRepo.save(any(Ticket.class))).thenReturn(testTicket);
+        this.mockMvc.perform(
+                post("/tickets")
+                        .param("user-id", "33333")
+                        .param("event-id", "88888")
+                        .param("place", "50")
+                        .param("category-id", "0"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Successfully booked ticket")))
+                .andExpect(content().string(containsString("44444")));
     }
 
     @Test
-    public void new_user_changes_name_and_buys_ticket_for_new_event_and_cancels_it() throws Exception {
-        User testUser = new UserImpl();
-        testUser.setId(777L);
-        testUser.setName("Terry");
-        testUser.setEmail("flat@world.com");
-
-        Event testEvent = new EventImpl();
-        testEvent.setId(888L);
-        testEvent.setTitle("Magic Conference");
-        testEvent.setDate(Date.from(Instant.parse("2022-03-03T17:00:00.000Z")));
-
-        User receivedUser = bookingFacade.createUser(testUser);
-        assertEquals(testUser, receivedUser);
-
-        testUser.setName("Terry Pratchett");
-        receivedUser = bookingFacade.updateUser(testUser);
-        assertEquals(testUser, receivedUser);
-
-        receivedUser = bookingFacade.getUserById(777l);
-        assertEquals(testUser, receivedUser);
-
-        bookingFacade.createEvent(testEvent);
-
-        Event receivedEvent = bookingFacade.getEventsByTitle("Magic", 10, 0).get(0);
-        assertEquals(testEvent, receivedEvent);
-
-        bookingFacade.bookTicket(777L, 888L, 15, Ticket.Category.PREMIUM);
-
-        Ticket ticket = bookingFacade.getBookedTickets(testUser, 10, 0).get(0);
-
-        assertEquals(777L, ticket.getUserId());
-        assertEquals(888L, ticket.getEventId());
-        assertEquals(Ticket.Category.PREMIUM, ticket.getCategory());
-        assertEquals(15, ticket.getPlace());
-
-        long ticketId = ticket.getId();
-
-        bookingFacade.cancelTicket(ticketId);
-
-        List<Ticket> newTicketsRequest = bookingFacade.getBookedTickets(testUser, 10, 0);
-
-        assertTrue(newTicketsRequest.isEmpty());
+    public void findEventByTitleShouldReturnThreeEventsFromPreLoadedBean() throws Exception {
+        this.mockMvc.perform(get("/events/title?title=Event&page-size=10&page-num=0")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("January Event")))
+                .andExpect(content().string(containsString("March Event")))
+                .andExpect(content().string(containsString("October Event")));
     }
 
-
+    @Test
+    public void findEventByDayShouldReturnEventFromPreLoadedBean() throws Exception {
+        this.mockMvc.perform(get("/events/day?day=2022-01-01&page-size=10&page-num=0")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("January Event")));
+    }
 }
