@@ -41,7 +41,7 @@ public class EventServiceImpl implements EventService {
         return false;
     }
 
-    //Не знаю, стоит ли тут добавлять транзакцию
+    @Transactional
     public boolean removeEventById(Long eventId) {
         Optional<Event> event = eventRepo.findById(eventId);
         if (event.isPresent()) {

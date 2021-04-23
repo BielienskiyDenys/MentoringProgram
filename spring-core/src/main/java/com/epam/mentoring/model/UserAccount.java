@@ -1,17 +1,12 @@
 package com.epam.mentoring.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "accounts")
 public class UserAccount {
     @Id
@@ -21,35 +16,11 @@ public class UserAccount {
     @MapsId
     private User user;
 
-    private Double balance;
+    private Double balance = 0.0;
 
     public UserAccount(User user) {
         this.id = user.getId();
         this.user = user;
-        this.balance = 0.0;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
 }

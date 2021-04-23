@@ -51,8 +51,8 @@ public class TicketServiceImpl implements TicketService {
 		return null;
 	}
 
-	// Не знаю, стоит ли добавлять транзакцию
 	@Override
+	@Transactional
 	public boolean removeTicketById(Long ticketId) {
 		logger.debug("removeTicketById({}) call. Readressing to repository.", ticketId);
 		Optional<Ticket> ticket = ticketRepo.findById(ticketId);

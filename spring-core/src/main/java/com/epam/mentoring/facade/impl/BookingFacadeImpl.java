@@ -1,10 +1,8 @@
 package com.epam.mentoring.facade.impl;
 
+import com.epam.mentoring.exception.EntityNotFoundException;
 import com.epam.mentoring.facade.BookingFacade;
-import com.epam.mentoring.model.Category;
-import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.User;
+import com.epam.mentoring.model.*;
 import com.epam.mentoring.service.AccountService;
 import com.epam.mentoring.service.EventService;
 import com.epam.mentoring.service.TicketService;
@@ -143,8 +141,15 @@ public class BookingFacadeImpl implements BookingFacade {
     @Transactional
     public Ticket bookTicket(long userId, long eventId, int place, Category category) {
         Double ticketPrice = eventService.findEventById(eventId).getTicketPrice();
-        if(accountService.chargeOff(userId, ticketPrice)) {
-            return ticketService.addTicket(userId, eventId, place, category);
+        try {
+            if(accountService.chargeOff(userId, ticketPrice)) {
+                logger.info("bookTicket({}, {}, {}, {}) call. Ticket booked successfully.", userId, eventId, place, category);
+                return ticketService.addTicket(userId, eventId, place, category);
+            } else {
+                logger.error("bookTicket({}, {}, {}, {}) call. Insufficient balance to book ticket.", userId, eventId, place, category);
+            };
+        } catch (EntityNotFoundException e) {
+            logger.error("bookTicket({}, {}, {}, {}) call. Invalid user id.", userId, eventId, place, category);
         }
         return null;
     }
@@ -177,12 +182,12 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
-    public boolean chargeBalanceForUser(Long id, Double amount) {
+    public UserAccount chargeBalanceForUser(Long id, Double amount) throws EntityNotFoundException {
         return accountService.charge(id, amount);
     }
 
     @Override
-    public boolean chargeOffBalanceForUser(Long id, Double amount) {
+    public boolean chargeOffBalanceForUser(Long id, Double amount)  throws EntityNotFoundException{
         return accountService.chargeOff(id, amount);
     }
 

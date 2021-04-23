@@ -1,9 +1,7 @@
 package com.epam.mentoring.facade;
 
-import com.epam.mentoring.model.Category;
-import com.epam.mentoring.model.Event;
-import com.epam.mentoring.model.Ticket;
-import com.epam.mentoring.model.User;
+import com.epam.mentoring.exception.EntityNotFoundException;
+import com.epam.mentoring.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -164,9 +162,9 @@ public interface BookingFacade {
 	 */
 	boolean cancelTicket(long ticketId);
 
-	boolean chargeBalanceForUser(Long id, Double amount);
+	UserAccount chargeBalanceForUser(Long id, Double amount) throws EntityNotFoundException;
 
-	boolean chargeOffBalanceForUser(Long id, Double amount);
+	boolean chargeOffBalanceForUser(Long id, Double amount) throws EntityNotFoundException;
 
 	Double checkBalanceForUser(Long id);
 }

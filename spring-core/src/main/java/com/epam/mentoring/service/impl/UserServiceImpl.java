@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
-	//Не знаю, стоит ли тут добавлять транзакцию
 	@Override
+	@Transactional
 	public boolean removeUserById(Long userId) {
 		Optional<User> user = userRepo.findById(userId);
 		if (user.isPresent()) {

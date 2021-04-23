@@ -1,11 +1,14 @@
 package com.epam.mentoring.model;
 
+import lombok.Data;
+
 import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
+@Data
 @Table(name = "events")
 public class Event{
 	@Id
@@ -27,42 +30,4 @@ public class Event{
 	@NotNull
 	@PositiveOrZero(message = "Event ticket price should not be less than 0")
 	private double ticketPrice;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public double getTicketPrice() {
-		return ticketPrice;
-	}
-
-	public void setTicketPrice(double ticketPrice) {
-		this.ticketPrice = ticketPrice;
-	}
-
-	@Override
-	public String toString() {
-		return "id=" + id + ", title=" + title + ", date=" + date;
-	}
-
 }
