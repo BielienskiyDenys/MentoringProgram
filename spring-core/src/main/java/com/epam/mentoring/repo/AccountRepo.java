@@ -1,9 +1,8 @@
 package com.epam.mentoring.repo;
 
 import com.epam.mentoring.model.UserAccount;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AccountRepo extends CrudRepository<UserAccount, Long> {
+public interface AccountRepo extends MongoRepository<UserAccount, Long> {
 }

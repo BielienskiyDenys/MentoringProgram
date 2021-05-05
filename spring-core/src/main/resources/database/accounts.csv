@@ -1,0 +1,4 @@
+_id	user._id	user.name	user.email	balance	_calss
+9	9	Thomas	catch@mouse.com	0	com.epam.mentoring.model.UserAccount
+8	8	Hero	hero@defender.com	501	com.epam.mentoring.model.UserAccount
+10	10	Terry	flat@world.com	20	com.epam.mentoring.model.UserAccount

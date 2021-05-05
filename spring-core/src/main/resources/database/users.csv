@@ -1,0 +1,6 @@
+_id	email	name	_calss
+6	tester06@test.mail	Hero	com.epam.mentoring.model.User
+7	benner@mrvl.com	Hero	com.epam.mentoring.model.User
+8	hero@defender.com	Hero	com.epam.mentoring.model.User
+9	catch@mouse.com	Thomas	com.epam.mentoring.model.User
+10	flat@world.com	Terry	com.epam.mentoring.model.User

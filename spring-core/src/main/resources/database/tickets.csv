@@ -1,0 +1,4 @@
+_id	eventId	userId	category	place	_calss
+2	2	8	0	1	com.epam.mentoring.model.Ticket
+3	2	8	0	35	com.epam.mentoring.model.Ticket
+4	2	8	0	34	com.epam.mentoring.model.Ticket

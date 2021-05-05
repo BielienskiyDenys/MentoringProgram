@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServiceImpl implements AccountService {
     private static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private AccountRepo accountRepo;
+    private AggregationService aggregationService;
 
-    public AccountServiceImpl(AccountRepo accountRepo) {
+    public AccountServiceImpl(AccountRepo accountRepo, AggregationService aggregationService) {
         this.accountRepo = accountRepo;
+        this.aggregationService = aggregationService;
     }
 
     @Override

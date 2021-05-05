@@ -7,6 +7,7 @@ import com.epam.mentoring.service.AccountService;
 import com.epam.mentoring.service.EventService;
 import com.epam.mentoring.service.TicketService;
 import com.epam.mentoring.service.UserService;
+import com.epam.mentoring.service.impl.AggregationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
