@@ -1,0 +1,26 @@
+// starting first container
+docker run --name cass-1 -p 9042:9042 cassandra:latest
+
+//staring other containers
+docker run --name cass-2 -e CASSANDRA_SEEDS=172.17.0.2 cassandra:latest
+docker run --name cass-3 -e CASSANDRA_SEEDS=172.17.0.2 cassandra:latest
+docker run --name cass-4 -e CASSANDRA_SEEDS=172.17.0.2 cassandra:latest
+
+//checking nodes load
+nodetool status
+
+
+cqlsh commands
+
+//manual check of keyspaces
+DESCRIBE KEYSPACES
+DESCRIBE KEYSPACE mentoring
+
+//manual keyspace creation
+CREATE KEYSPACE mentoring WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true;
+
+//keyspace choosing
+USE mentoring;
+
+//table creation
+create TABLE logs (log_level text, timestamp bigint, message text, PRIMARY KEY (log_level, timestamp));
