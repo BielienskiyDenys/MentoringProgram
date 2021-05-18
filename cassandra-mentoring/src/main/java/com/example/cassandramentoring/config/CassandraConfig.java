@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
-
     public static final String KEYSPACE = "mentoring";
 
     @Override
