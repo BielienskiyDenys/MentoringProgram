@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface LogMessageRepo extends CrudRepository<LogMessage, Serializable> {
     Optional<LogMessage> findByLogLevelAndTimestamp(LogLevel level, Long timestamp);
-    List<LogMessage> findByLogLevel(LogLevel level);
     List<LogMessage> findAll();
     void deleteByLogLevelAndTimestamp(LogLevel level, Long timestamp);
 }

@@ -1,5 +1,6 @@
 package com.example.cassandramentoring.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 @Table("logs")
 public class LogMessage {
 //public class LogMessage implements Serializable {
