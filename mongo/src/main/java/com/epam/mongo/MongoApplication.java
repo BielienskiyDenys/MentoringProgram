@@ -10,7 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,18 +38,39 @@ public class MongoApplication
 		taskService.clearDatabase();
 		taskService.prefillDatabase();
 
+		searchAllEnteties();
+		searchEntetiesByTimeFieldAccordingToNow();
+		searchEntitiesByField();
+		searchChildEntitiesByField();
+		runCrudOperationsForEnities();
+		runCrudOperationsForChildEnteties();
+		searchBySecondaryField();
+		searchByChildObjectField();
+
+		System.out.println("====== DEMO RUN END =====");
+	}
+
+	private void searchAllEnteties() {
 		System.out.println("----Task1----");
 		System.out.println(taskService.getAllTasks());
+	}
 
+	private void searchEntetiesByTimeFieldAccordingToNow() {
 		System.out.println("----Task2----");
 		System.out.println(taskService.getAllOverdueTasks());
+	}
 
+	private void searchEntitiesByField() {
 		System.out.println("----Task3----");
 		System.out.println(taskService.getAllTasksForCategory("Misc"));
+	}
 
+	private void searchChildEntitiesByField() {
 		System.out.println("----Task4----");
 		System.out.println(taskService.getAllSubtasksForCategory("Gear"));
+	}
 
+	private void runCrudOperationsForEnities() {
 		System.out.println("----Task5----");
 		List<Subtask> subtasks = new LinkedList<>();
 		subtasks.add(new Subtask(21L, "Do some stuff", "Some description"));
@@ -69,7 +89,9 @@ public class MongoApplication
 		System.out.println("After updating task: " + taskService.getAllTasks().size());
 		taskService.deleteTaskById(newTask.getId());
 		System.out.println("After deleting task: " + taskService.getAllTasks().size());
+	}
 
+	private void runCrudOperationsForChildEnteties() {
 		System.out.println("----Task6----");
 		Subtask newSubtask = new Subtask(30L, "Testing subtasks", "Added new subtask to existing task");
 		System.out.println("Task before adding subtask: "+taskService.getTaksById(6L));
@@ -80,14 +102,18 @@ public class MongoApplication
 		System.out.println("Task after updating subtask: "+taskService.getTaksById(6L));
 		taskService.deleteSubtaskById(6L, newSubtask.getId());
 		System.out.println("Task after deleting subtask: "+taskService.getTaksById(6L));
+	}
 
+	private void searchBySecondaryField() {
 		System.out.println("----Task7----");
 		System.out.println(taskService.findByDescription("Obtain"));
-
-		System.out.println("----Task8----");
-		System.out.println(taskService.findBySubtaskName("Gather 75 Magerose"));
-
-		System.out.println("====== DEMO RUN END =====");
 	}
+
+	private void searchByChildObjectField() {
+		System.out.println("----Task8----");
+		taskService.findBySubtaskName("Gather 75 Magerose");
+	}
+
+
 
 }
